@@ -9,7 +9,7 @@
   "scope": "/",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" },
+    { "src": "/favicon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
     { "src": "/icons/icon-72.svg", "sizes": "72x72", "type": "image/svg+xml", "purpose": "any maskable" },
     { "src": "/icons/icon-96.svg", "sizes": "96x96", "type": "image/svg+xml", "purpose": "any maskable" },
     { "src": "/icons/icon-128.svg", "sizes": "128x128", "type": "image/svg+xml", "purpose": "any maskable" },
