@@ -393,21 +393,29 @@ Return this exact JSON:
         messages: [
           {
             role: "user",
-            content: `Query: "${query.trim()}"\nCountry: ${country}\n\nAnalyze and recommend.`,
+            content: `Query: "${query.trim()}"
+Country: ${country}
+
+Fresh test data found:
+${JSON.stringify(searchResults)}
+
+Based on this current data AND your knowledge, give the best recommendation in JSON format.
+Prioritize the fresh search results over your training data when they conflict.
+Use the actual sources found for the sources array.`,
           },
         ],
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
+    if (!recommendationResponse.ok) {
+      const errorText = await recommendationResponse.text();
       return new Response(JSON.stringify({ error: "Anthropic API call failed", details: errorText }), {
-        status: response.status,
+        status: recommendationResponse.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const data = await response.json();
+    const data = await recommendationResponse.json();
     const text = data.content?.[0]?.type === "text" ? data.content[0].text : "";
     const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const result = JSON.parse(cleaned);
