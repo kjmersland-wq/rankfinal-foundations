@@ -112,7 +112,7 @@ function Sources({ result }: { result: RankFinalResult }) {
   return (
     <Card className="print-section sources-section">
       <CardHeader>
-        <CardTitle>Verified sources</CardTitle>
+        <CardTitle>Verified Sources</CardTitle>
         <CardDescription>All sources are independent. RankFinal receives no payment from any reviewed brand.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
@@ -125,7 +125,7 @@ function Sources({ result }: { result: RankFinalResult }) {
             <p className="mt-2 text-xs font-bold uppercase tracking-wide text-text-secondary">{source.date} · {"★".repeat(Math.max(1, Math.min(5, Math.round(source.credibility))))}</p>
             <p className="mt-3 text-sm leading-6 text-text-secondary">{source.description}</p>
             <a href={source.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-accent-amber">
-              View source <ExternalLink className="size-4" />
+              → View source <ExternalLink className="size-4" />
             </a>
           </article>
         ))}
