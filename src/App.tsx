@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import Browse from "./pages/Browse.tsx";
 import SearchPage from "./pages/Search.tsx";
 import Pricing from "./pages/Pricing.tsx";
+import Help from "./pages/Help.tsx";
+import HelpArticle from "./pages/HelpArticle.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 
@@ -26,7 +28,8 @@ const App = () => (
             <Route path="/search" element={<SearchPage />} />
             <Route path="/browse" element={<Browse />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/help" element={<PlaceholderPage title="Help" />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/help/:slug" element={<HelpArticle />} />
             <Route path="/about" element={<PlaceholderPage title="About" />} />
             <Route path="/privacy" element={<PlaceholderPage title="Privacy" />} />
             <Route path="/terms" element={<PlaceholderPage title="Terms" />} />
