@@ -10,7 +10,6 @@ import { ScrollToTop } from "@/components/rankfinal/ScrollToTop";
 import { AddToHomePrompt } from "@/components/rankfinal/AddToHomePrompt";
 import { RouteShell } from "@/components/rankfinal/RouteShell";
 import { LoadingSkeleton } from "@/components/rankfinal/ui";
-import { PaymentTestModeBanner } from "@/components/payments/PaymentTestModeBanner";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Browse = lazy(() => import("./pages/Browse.tsx"));
@@ -41,7 +40,6 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="min-h-screen bg-background text-foreground">
-          <PaymentTestModeBanner />
           <Nav />
           <RouteShell>
             <Suspense fallback={routeFallback}>
