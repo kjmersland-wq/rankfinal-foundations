@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer, Nav } from "@/components/rankfinal/layout";
 import Index from "./pages/Index.tsx";
 import Browse from "./pages/Browse.tsx";
+import SearchPage from "./pages/Search.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 
@@ -21,7 +22,7 @@ const App = () => (
           <Nav />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/search" element={<PlaceholderPage title="Search" />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/browse" element={<Browse />} />
             <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
             <Route path="/help" element={<PlaceholderPage title="Help" />} />

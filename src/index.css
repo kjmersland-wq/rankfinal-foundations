@@ -94,3 +94,58 @@
     @apply bg-accent-amber text-primary-foreground;
   }
 }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  header,
+  footer,
+  .filters,
+  .share-actions,
+  nav,
+  button,
+  .fixed {
+    display: none !important;
+  }
+
+  .print-header {
+    display: block !important;
+    margin-bottom: 12px;
+    color: black !important;
+  }
+
+  .print-section,
+  .print-section * {
+    background: white !important;
+    color: black !important;
+    border-color: #777 !important;
+  }
+
+  .print-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 12px;
+  }
+
+  .sources-section [class*="hidden"] {
+    display: block !important;
+  }
+
+  a::after {
+    content: "";
+  }
+}
