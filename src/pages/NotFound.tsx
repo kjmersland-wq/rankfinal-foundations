@@ -1,5 +1,9 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/components/rankfinal/ui";
+import { PageWrapper } from "@/components/rankfinal/layout";
+import { Badge } from "@/components/rankfinal/ui";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,15 +13,15 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
+    <PageWrapper className="min-h-[70vh] py-16">
+      <div className="mx-auto max-w-3xl space-y-6 text-center">
+        <Badge variant="red">404</Badge>
+        <h1 className="text-4xl font-extrabold text-text-primary sm:text-6xl">Page not found.</h1>
+        <p className="text-lg text-text-secondary">Search for what you need:</p>
+        <SearchBar containerClassName="mx-auto h-14 max-w-none" />
+        <Button asChild variant="amber" size="lg"><Link to="/">Back to home</Link></Button>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 
