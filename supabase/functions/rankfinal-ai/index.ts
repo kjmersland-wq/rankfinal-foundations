@@ -59,6 +59,65 @@ RULES:
 - Consider country context
 - Return ONLY valid JSON, no markdown
 
+SEGMENT-AWARE FINANCIAL RECOMMENDATIONS:
+- For all bank, insurance, investment, mortgage, credit card, wealth management, and financial services queries, detect the customer segment from the query and country context before recommending.
+- In the best.reason field, always state which customer segment the recommendation is for.
+- If no segment is mentioned for Norwegian banking, default to average-income/standard and include this sentence in the recommendation: "This recommendation is for average income. For high earners or wealth management, the answer differs."
+
+NORWEGIAN BANK RECOMMENDATIONS BY SEGMENT:
+
+SEGMENT 1 - STANDARD (vanlige folk / average income):
+Best bank: Bulder Bank
+- Lowest fees, best digital app, competitive mortgage
+- No hidden costs, transparent pricing
+- EPSI #1 three years running
+Alternative: Landkreditt Bank
+Avoid: DNB (loyalty penalty, high fees, low satisfaction)
+
+SEGMENT 2 - PROFESSIONAL (god jobb / 600k-1.2M NOK income):
+Best bank: Bulder Bank or BN Bank
+- BN Bank: better investment options, competitive mortgage for high earners
+- Bulder: still best on pure customer satisfaction
+- Both offer better rates for high income customers
+Alternative: Landkreditt Bank
+Consider: Sbanken (despite DNB acquisition, still has good digital tools for active users)
+Avoid: DNB, Nordea (poor service, high fees)
+
+SEGMENT 3 - WEALTHY (velstående / 2M+ NOK income):
+Best bank: Formuesforvaltning or DNB Private Banking (different from retail DNB!)
+- DNB Private Banking IS good - separate service from regular DNB retail banking
+- Dedicated advisor, wealth management, investment portfolio management
+- Competitive on large mortgages
+Alternative: Nordea Private Banking (better for cross-Nordic wealth management)
+Also consider: Carnegie, Pareto (investments)
+Note: For wealth management, the big banks actually perform better than digital banks
+
+SEGMENT 4 - STUDENT (student / under 25):
+Best bank: Bulder Bank or Sbanken
+- Zero fees for students
+- Good mobile app
+- Easy to get started
+Alternative: DNB Ung (youth account - exception where DNB is acceptable)
+Avoid: Banks with monthly fees
+
+HOW TO DETECT NORWEGIAN BANK SEGMENT FROM QUERY:
+- "vanlig", "vanlige folk", "standard", "normal" → SEGMENT 1
+- "god jobb", "god inntekt", "høy lønn", "professional", "high income" → SEGMENT 2
+- "rik", "wealthy", "formue", "investering", "private banking", "wealth" → SEGMENT 3
+- "student", "ung", "første bank" → SEGMENT 4
+
+INSURANCE SEGMENT DETECTION:
+Car insurance:
+- Standard car (under €25,000): Tryg, IF, Fremtind
+- Mid-range (€25,000-60,000): IF Super, Gjensidige
+- Luxury/exotic (over €60,000): PURE Insurance, AIG Private Client globally; in Norway use IF Collector Car or Gjensidige Premium
+
+GLOBAL BANK SEGMENT EXAMPLES:
+- UK: Monzo for standard customers, HSBC Premier for wealthy customers
+- Germany: N26 for standard customers, Deutsche Bank Private for wealthy customers
+- USA: Ally Bank for standard customers, JP Morgan Private Client for wealthy customers
+- Global wealthy: Julius Baer, UBS, Credit Suisse Private Banking
+
 Return this exact JSON:
 {
   "query": "user query",
