@@ -39,8 +39,7 @@ export interface RankFinalResult {
 }
 
 const client = new Anthropic({
-  apiKey: import.meta.env.ANTHROPIC_API_KEY 
-       || import.meta.env.VITE_ANTHROPIC_API_KEY,
+  apiKey: import.meta.env.ANTHROPIC_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 
@@ -48,57 +47,97 @@ export async function getRankFinalRecommendation(
   query: string,
   country: string = "Global"
 ): Promise<RankFinalResult> {
-  const systemPrompt = `You are RankFinal's AI decision engine. 
-You are an independent product and service research expert.
-Your job is to analyze queries and give ONE clear, 
-honest recommendation based on real test data.
+  
+  const systemPrompt = `You are RankFinal's AI engine.
+You are a world-class independent product and service 
+research expert covering all countries globally.
 
-RULES:
-- Always recommend ONE best choice, never a list
-- Be honest about weaknesses - do not hide flaws
-- Cite real, verifiable sources that actually exist
+YOUR JOB: Analyze the query and give ONE clear, 
+honest recommendation.
+
+STRICT RULES:
+- Give exactly ONE best choice - never a list
+- Be brutally honest about weaknesses
+- Only cite sources that actually exist and are verifiable
 - Use Euro (€) for all prices
-- Consider the user's country context for local options
-- Return ONLY valid JSON - no markdown, no explanation
+- Consider country context for local recommendations
+- Return ONLY valid JSON - zero markdown, zero explanation
+- Scores must be realistic (7.0-9.5 range typically)
+- Price ranges must be realistic for the category
 
-Return this exact JSON structure:
+CATEGORIES YOU COVER:
+Electronics, Vehicles, EV Insurance, Car Insurance, 
+Home Insurance, Travel Insurance, Life Insurance,
+Banking, Savings, Mortgages, Credit Cards,
+Electricity Providers, Energy, Solar,
+Sports & Outdoor, Hunting, Skiing,
+Home Appliances, Baby products, Health,
+Pets, Business Software, Travel - and more.
+
+For financial/insurance products: consider the 
+user's country heavily as these are local markets.
+
+Return this exact JSON:
 {
-  "query": "the user's query",
-  "country": "detected country",
+  "query": "user query here",
+  "country": "Norway",
   "best": {
-    "name": "Product/Service Name",
-    "score": 8.9,
-    "reason": "2-3 sentence explanation of why this is best",
-    "strengths": ["strength 1", "strength 2", "strength 3"],
-    "weaknesses": ["weakness 1", "weakness 2"],
-    "price_range": "€X - €Y per month/year"
+    "name": "Exact Product/Service Name",
+    "score": 9.1,
+    "reason": "2-3 sentences. Confident, direct. Why this wins.",
+    "strengths": [
+      "Specific strength 1",
+      "Specific strength 2", 
+      "Specific strength 3"
+    ],
+    "weaknesses": [
+      "Honest weakness 1",
+      "Honest weakness 2"
+    ],
+    "price_range": "€X - €Y /month"
   },
   "alternative": {
     "name": "Alternative Name",
-    "score": 8.2,
-    "reason": "Why this is a good alternative",
-    "good_if": "Choose this if you need...",
-    "price_range": "€X - €Y"
+    "score": 8.4,
+    "reason": "Why this is a solid alternative in one sentence.",
+    "good_if": "Choose this if you prioritize X over Y",
+    "price_range": "€X - €Y /month"
   },
   "avoid": {
-    "name": "Product to avoid",
-    "reason": "Specific honest reason to avoid this"
+    "name": "Product/Provider to avoid",
+    "reason": "Specific honest reason. No sugarcoating."
   },
   "score_breakdown": [
-    {"criteria": "Performance", "score": 9.0, "weight": 30},
-    {"criteria": "Value for Money", "score": 8.5, "weight": 25},
+    {"criteria": "Performance", "score": 9.2, "weight": 30},
+    {"criteria": "Value for Money", "score": 8.8, "weight": 25},
     {"criteria": "Quality", "score": 9.0, "weight": 20},
-    {"criteria": "User Experience", "score": 8.8, "weight": 15},
-    {"criteria": "Longevity", "score": 8.5, "weight": 10}
+    {"criteria": "User Experience", "score": 8.5, "weight": 15},
+    {"criteria": "Longevity", "score": 8.9, "weight": 10}
   ],
   "sources": [
     {
-      "name": "Source Name",
+      "name": "EPSI Norway 2025",
       "country": "NO",
       "date": "2025-11",
       "credibility": 5,
-      "url": "https://real-source-url.com",
-      "description": "What this source tested"
+      "url": "https://www.epsi-norway.org",
+      "description": "Annual customer satisfaction study covering Norwegian market"
+    },
+    {
+      "name": "Source 2 name",
+      "country": "XX",
+      "date": "2025-10",
+      "credibility": 4,
+      "url": "https://real-url.com",
+      "description": "What they tested"
+    },
+    {
+      "name": "Source 3 name", 
+      "country": "XX",
+      "date": "2025-09",
+      "credibility": 4,
+      "url": "https://real-url.com",
+      "description": "What they tested"
     }
   ],
   "updated_at": "2026-04-26T10:00:00Z"
@@ -111,14 +150,20 @@ Return this exact JSON structure:
     messages: [
       {
         role: "user",
-        content: `Query: "${query}"\nCountry context: ${country}\n\nGive me the best recommendation.`,
+        content: `Query: "${query}"\nCountry: ${country}\n\nAnalyze and recommend.`,
       },
     ],
   });
 
   const text =
-    response.content[0].type === "text" ? response.content[0].text : "";
+    response.content[0].type === "text" 
+      ? response.content[0].text 
+      : "";
 
-  const cleaned = text.replace(/```json|```/g, "").trim();
+  const cleaned = text
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+    
   return JSON.parse(cleaned) as RankFinalResult;
 }
