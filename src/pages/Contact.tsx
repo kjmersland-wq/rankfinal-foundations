@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import type { ReactNode } from "react";
 import { ArrowRight, CheckCircle2, Send } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,6 @@ export default function Contact() {
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return <label className="block space-y-2 text-sm font-bold text-text-primary"><span>{label}</span>{children}{error && <span className="block text-sm font-semibold text-destructive">{error}</span>}</label>;
 }
