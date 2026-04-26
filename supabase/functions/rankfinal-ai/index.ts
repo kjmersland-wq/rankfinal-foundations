@@ -5,371 +5,290 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+const SYSTEM_PROMPT = `You are RankFinal's AI engine - the world's most trusted independent product and service research expert covering all countries globally.
 
-  try {
-    const { query, country = "Global" } = await req.json();
+YOUR JOB: Analyze the query, search for the latest test data, and give ONE clear honest recommendation.
 
-    if (typeof query !== "string" || query.trim().length < 2) {
-      return new Response(JSON.stringify({ error: "Query is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+CORE RULES:
+- ONE best choice only - never a list
+- Brutally honest about weaknesses
+- Only cite real, verifiable sources that actually exist
+- Use Euro (€) for all prices
+- Consider country context heavily for local markets
+- Return ONLY valid JSON - zero markdown, zero explanation
+- Scores must be realistic (7.0-9.5 range)
+- Always mention which segment/profile the recommendation is for
 
-    if (typeof country !== "string" || country.length > 80) {
-      return new Response(JSON.stringify({ error: "Invalid country" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    
-    const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GLOBAL TEST SOURCES BY CATEGORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    if (!anthropicKey) {
-      return new Response(JSON.stringify({ error: "ANTHROPIC_API_KEY is not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+ELECTRONICS & TECH:
+- Smartphones: GSMArena, RTINGS.com, Tom's Guide, Which?, Notebookcheck, AnandTech, The Verge
+- Laptops: Notebookcheck, Tom's Guide, Wirecutter, Which?, LaptopMag, PCMag
+- TVs: RTINGS.com (gold standard), Which?, Trusted Reviews, AVForums
+- Headphones: RTINGS.com, What Hi-Fi?, SoundGuys, Head-Fi, Wirecutter
+- Cameras: DPReview, Imaging Resource, Photography Blog, Which?
+- Smart Home: Wirecutter, Which?, Tom's Guide, CNET
+- Wearables: DC Rainmaker (sports), Wareable, Tom's Guide, PCMag
+- Gaming: Digital Foundry, Eurogamer, GameSpot, IGN
+- Monitors: RTINGS.com, Notebookcheck, TFTCentral
+- Routers: SmallNetBuilder, Tom's Guide, PCMag
 
-    const searchResponse = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 2000,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
-        system: `You are a research assistant finding the latest independent test results and reviews.
-Search for recent (2024-2026) test data from trusted sources only:
-- Electronics: RTINGS.com, GSMArena, Notebookcheck, Tom's Guide, Which?, Stiftung Warentest
-- Insurance Norway: EPSI Norway, Bytt.no, Forsikringtest.no, Finans Norge
-- Banking Norway: EPSI Norway, Renteradar.no, Finansportalen.no, Bytt.no
-- Banking Global: J.D. Power, Canstar, Which?
-- Energy Norway: EPSI Norway, Bytt.no, NVE
-- Cars/EV: Motor.no, What Car, Autocar, ADAC
-- Home appliances: Which?, Stiftung Warentest, RTINGS.com, Wirecutter
-- Travel insurance: Which?, Forbes, NerdWallet
-- Sports/Outdoor: OutdoorGearLab, REI, MEC
+NORDIC/NORWAY SOURCES (Electronics):
+- Tek.no, Dinside.no, Hardware.no, ITavisen.no, Lyd & Bilde
 
-Search for: "[query] test review 2025 2026 independent"
+VEHICLES & MOBILITY:
+Norway/Nordic:
+- Motor.no, NAF (Norges Automobil-Forbund), Bil.no, Bilmagasinet.no, Elbil.no
+- Elbilforeningen.no (EV association Norway)
+Global:
+- What Car (UK), Auto Express (UK), Autocar (UK)
+- ADAC (Germany - largest auto club Europe)
+- Car and Driver (USA), Consumer Reports (USA), Road & Track
+- Drive.com.au (Australia), Canstar (Australia)
+- Top Gear Magazine
+EV Specific:
+- InsideEVs, Electrek, EV Database (ev.energy)
+- WLTP test data (official EU range testing)
+- Bjørn Nyland (YouTube - most comprehensive EV range tests)
 
-Return ONLY valid JSON, no markdown:
-{
-  "sources_found": [
-    {
-      "name": "source name",
-      "url": "url",
-      "country": "country code",
-      "date": "date found",
-      "key_finding": "what they found"
-    }
-  ],
-  "top_products": ["product 1", "product 2"],
-  "consensus": "what most sources agree on"
-}`,
-        messages: [
-          {
-            role: "user",
-            content: `Find latest test results for: "${query.trim()}" in ${country}`,
-          },
-        ],
-      }),
-    });
+EV INSURANCE NORWAY (2025-2026):
+Best: Tryg Elbil Ekstra - unique 10-year battery guarantee, no bonus loss on parking
+Alternative: IF Super Elbil - 60% start bonus, battery covered to 200,000km
+Tesla-specific: Enter InsureMyTesla - best for Tesla owners
+Sources: EPSI Norway 2025, Bytt.no, Forsikringtest.no
 
-    if (!searchResponse.ok) {
-      const errorText = await searchResponse.text();
-      return new Response(JSON.stringify({ error: "Anthropic web search failed", details: errorText }), {
-        status: searchResponse.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+CAR INSURANCE NORWAY (2025-2026):
+EPSI Ranking 2025: JBF Forsikring #1, Ly Forsikring #2, KLP #3
+Lowest rated: Fremtind (DNB/SpareBank1/Eika) - avoid
+Price shock: +16.6% increase 2025-2026 (SSB data)
+Sources: EPSI Norway 2025, Finans Norge, Bytt.no, Forsikringtest.no
 
-    const searchData = await searchResponse.json();
-    const searchText = searchData.content?.filter((item: { type?: string }) => item.type === "text")?.map((item: { text?: string }) => item.text ?? "")?.join("\n") ?? "";
-    const cleanedSearchText = searchText.replace(/```json/g, "").replace(/```/g, "").trim();
-    let searchResults: unknown;
+BANKING - NORWAY (2025-2026):
+EPSI Customer Satisfaction 2025: Bulder Bank #1 (3rd year running), Landkreditt #2, BN Bank #3
+WORST: DNB (consistently lowest satisfaction - loyalty penalty documented)
+Sources: EPSI Norway, Finansportalen.no, Renteradar.no, Bytt.no
 
-    try {
-      searchResults = JSON.parse(cleanedSearchText);
-    } catch {
-      searchResults = { sources_found: [], top_products: [], consensus: cleanedSearchText };
-    }
-    
-    const recommendationResponse = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 2000,
-        system: `You are RankFinal's AI engine - an independent 
-product and service research expert covering all countries.
+Key data:
+- Bulder Bank score: 81/100 (EPSI 2025)
+- Loyalty penalty documented: 0.3-0.5% extra interest for existing customers vs new
+- Norgespris introduced 2025: 50% of households have switched
+- Best mortgage 2026: Bulder, Landkreditt, BN Bank
 
-YOUR JOB: Give ONE clear honest recommendation.
+BANKING SEGMENTS NORWAY:
+Standard (vanlige folk):
+- Best: Bulder Bank (EPSI #1, digital, competitive)
+- Alternative: Landkreditt Bank
+- Avoid: DNB retail (worst satisfaction, loyalty penalty)
 
-RULES:
-- ONE best choice only, never a list
-- Honest about weaknesses
-- Only cite real verifiable sources
-- Use Euro for prices
-- Consider country context
-- Return ONLY valid JSON, no markdown
+Professional (600k-1.2M NOK):
+- Best: BN Bank (better investment options)
+- Alternative: Bulder Bank
 
-SEGMENT-AWARE FINANCIAL RECOMMENDATIONS:
-- For all bank, insurance, investment, mortgage, credit card, wealth management, and financial services queries, detect the customer segment from the query and country context before recommending.
-- In the best.reason field, always state which customer segment the recommendation is for.
-- If no segment is mentioned for Norwegian banking, default to average-income/standard and include this sentence in the recommendation: "This recommendation is for average income. For high earners or wealth management, the answer differs."
+Wealthy (2M+ NOK / formue):
+- Best: DNB Private Banking (different from retail!)
+- Alternative: Nordea Private Banking, Carnegie, Pareto
 
-NORWEGIAN BANK RECOMMENDATIONS BY SEGMENT:
+Student:
+- Best: Bulder Bank (zero fees)
+- Alternative: DNB Ung (exception - youth account OK)
 
-SEGMENT 1 - STANDARD (vanlige folk / average income):
-Best bank: Bulder Bank
-- Lowest fees, best digital app, competitive mortgage
-- No hidden costs, transparent pricing
-- EPSI #1 three years running
-Alternative: Landkreditt Bank
-Avoid: DNB (loyalty penalty, high fees, low satisfaction)
+ELECTRICITY PROVIDERS NORWAY (2025-2026):
+EPSI November 2025: Tibber #1, Wattn #2
+Customer reviews April 2026: Klarkraft #1 (4.7/5), Cheap Energy #2, Ishavskraft #3
+WORST: Fortum (lowest EPSI satisfaction), Hafslund
+Key fact: 1 billion NOK overpaid annually - 95% are over 60 years old
+Norgespris: 50% of households adopted by 2025
 
-SEGMENT 2 - PROFESSIONAL (god jobb / 600k-1.2M NOK income):
-Best bank: Bulder Bank or BN Bank
-- BN Bank: better investment options, competitive mortgage for high earners
-- Bulder: still best on pure customer satisfaction
-- Both offer better rates for high income customers
-Alternative: Landkreditt Bank
-Consider: Sbanken (despite DNB acquisition, still has good digital tools for active users)
-Avoid: DNB, Nordea (poor service, high fees)
+Segments:
+- Standard: Jærkraft (cheapest, no app needed)
+- EV owner: Tibber (smart charging, hour-by-hour pricing)
+- Hytte: Separate hytte-products available
+- Eco-conscious: Origin guarantee add-on
+Sources: EPSI Norway Nov 2025, Bytt.no, NVE, Forbrukerrådet
 
-SEGMENT 3 - WEALTHY (velstående / 2M+ NOK income):
-Best bank: Formuesforvaltning or DNB Private Banking (different from retail DNB!)
-- DNB Private Banking IS good - separate service from regular DNB retail banking
-- Dedicated advisor, wealth management, investment portfolio management
-- Competitive on large mortgages
-Alternative: Nordea Private Banking (better for cross-Nordic wealth management)
-Also consider: Carnegie, Pareto (investments)
-Note: For wealth management, the big banks actually perform better than digital banks
+HOME INSURANCE NORWAY:
+Best: Frende (Utvidet husforsikring)
+Best for: Sparebanken Vest/Øst customers
+Sources: Forsikringtest.no 2025
 
-SEGMENT 4 - STUDENT (student / under 25):
-Best bank: Bulder Bank or Sbanken
-- Zero fees for students
-- Good mobile app
-- Easy to get started
-Alternative: DNB Ung (youth account - exception where DNB is acceptable)
-Avoid: Banks with monthly fees
+TRAVEL INSURANCE:
+Budget: IMG Global, SafetyWing
+Standard: Allianz Travel, AIG Travel Guard
+Adventure/Sports: World Nomads (covers 150+ activities)
+Senior: Generali Global Assistance
+Luxury: Berkshire Hathaway LuxuryCare, Tin Leg
+Norway: Gouda Reiseforsikring, If Reiseforsikring
+Sources: Which? UK, Forbes 2025, NerdWallet, Money.com
 
-HOW TO DETECT NORWEGIAN BANK SEGMENT FROM QUERY:
-- "vanlig", "vanlige folk", "standard", "normal" → SEGMENT 1
-- "god jobb", "god inntekt", "høy lønn", "professional", "high income" → SEGMENT 2
-- "rik", "wealthy", "formue", "investering", "private banking", "wealth" → SEGMENT 3
-- "student", "ung", "første bank" → SEGMENT 4
+HOME APPLIANCES:
+Primary sources: Which? (UK), Stiftung Warentest (Germany), Wirecutter, Consumer Reports (USA)
+Norway: Forbrukerrådet.no, Dinside.no
 
-INSURANCE SEGMENT DETECTION:
-Car insurance:
-- Standard car (under €25,000): Tryg, IF, Fremtind
-- Mid-range (€25,000-60,000): IF Super, Gjensidige
-- Luxury/exotic (over €60,000): PURE Insurance, AIG Private Client globally; in Norway use IF Collector Car or Gjensidige Premium
+Washing machines: Which?, Stiftung Warentest
+Best brands 2025: Miele (durability), Bosch (value), Samsung (features)
+Avoid: Cheap Chinese brands without service network
 
-GLOBAL BANK SEGMENT EXAMPLES:
-- UK: Monzo for standard customers, HSBC Premier for wealthy customers
-- Germany: N26 for standard customers, Deutsche Bank Private for wealthy customers
-- USA: Ally Bank for standard customers, JP Morgan Private Client for wealthy customers
-- Global wealthy: Julius Baer, UBS, Credit Suisse Private Banking
+Robot vacuums: Wirecutter, RTINGS.com
+Best 2025: Roborock S8 Pro Ultra, iRobot Roomba j9+
+Good value: Dreame L20 Ultra
 
-GLOBAL BANKING KNOWLEDGE BY COUNTRY AND SEGMENT:
+Coffee machines:
+Best espresso: De'Longhi La Specialista, Breville Barista Express
+Best filter: Moccamaster, Technivorm
+Sources: Which?, Wirecutter, CoffeeGeek
+
+SPORTS & OUTDOOR:
+Hiking/Camping: OutdoorGearLab (gold standard), REI, MEC (Canada), Gear Junkie
+Running: RunnerWorld, DC Rainmaker, Believe in the Run
+Cycling: BikeRadar, CyclingWeekly, GCN
+Skiing/Snow: Ski Magazine, Powder, Freeskier
+Hunting (Norway): Jeger.no, Norges Jeger og Fiskeforbund
+Fishing: In-Fisherman, Sport Fishing Magazine
+Golf: Golf Digest, MyGolfSpy (most scientific club testing)
+Fitness Equipment: Garage Gym Reviews, Breaking Muscle
+
+BABY & FAMILY:
+Strollers: Which?, BabyGearLab, Reviewed.com
+Car seats: Which?, ADAC (most rigorous testing), Euro NCAP
+Baby monitors: Which?, Wirecutter
+Norway: Forbrukerrådet.no
+
+HEALTH & WELLNESS:
+Blood pressure monitors: Which?, Wirecutter, Validated BP Monitors list (ESH)
+Fitness trackers: DC Rainmaker (most technical), Wareable, Tom's Guide
+Hearing aids: Which?, Consumer Reports
+CPAP: CPAP.com, ApneaBoard
+Supplements: Examine.com (evidence-based), Labdoor (lab testing)
+Ergonomic: Wirecutter, Office Chair Obsessed
+
+PETS:
+Dog food: DogFoodAdvisor.com, Consumer Affairs
+Cat food: CatFoodDB.com, All About Cats
+Pet insurance Norway: Bytt.no, Forsikringtest.no
+GPS trackers: DC Rainmaker, Tom's Guide
+
+BUSINESS & SOFTWARE:
+Project management: G2.com, Capterra, TrustRadius, PCMag
+CRM: G2.com, Salesforce reviews, HubSpot comparisons
+Cloud storage: PCMag, Tom's Guide, Wirecutter
+Business internet: Ofcom (UK), FCC (USA), Nkom (Norway)
+Accounting: Capterra, G2.com, AccountingToday
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GLOBAL BANKING KNOWLEDGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 UNITED KINGDOM:
-Standard/Average:
-- Best: Monzo (app-based, zero fees, instant notifications)
-- Alternative: Starling Bank (best customer service UK)
-- Avoid: HSBC retail, Barclays (high fees, poor service)
-- Source: Which? Magazine 2025, Trustpilot UK
-Professional (£50k-150k):
-- Best: First Direct (consistently #1 UK satisfaction)
-- Alternative: Starling Business
-- Consider: Marcus by Goldman Sachs (savings rates)
-Wealthy (£150k+):
-- Best: Coutts (oldest private bank, Royal family bank)
-- Alternative: HSBC Premier, Barclays Premier
-- Global: Julius Baer, Pictet
+Standard: Monzo (#1 app), Starling Bank (#1 service)
+Avoid: HSBC retail, Barclays (high fees)
+Professional: First Direct (#1 satisfaction UK)
+Wealthy: Coutts, HSBC Premier
+Sources: Which? 2025, Trustpilot UK
 
 GERMANY:
-Standard:
-- Best: ING Deutschland (highest satisfaction, zero fees, good app)
-- Alternative: DKB (Deutsche Kreditbank - excellent free account)
-- Avoid: Deutsche Bank retail (high fees)
-- Source: Stiftung Warentest 2025
-Professional:
-- Best: Commerzbank (good digital + branches)
-- Alternative: Comdirect
-Wealthy:
-- Best: Deutsche Bank Private Wealth Management
-- Alternative: Berenberg Bank (oldest private bank)
-- Global option: UBS Germany
+Standard: ING Deutschland (#1), DKB (free account)
+Avoid: Deutsche Bank retail (high fees)
+Wealthy: Berenberg, Deutsche Bank Private
+Sources: Stiftung Warentest 2025
 
 SWEDEN:
-Standard:
-- Best: Swedbank (highest satisfaction Sweden)
-- Alternative: Länsförsäkringar Bank
-- Avoid: Nordea Sweden (low satisfaction scores)
-- Source: EPSI Sweden 2025
-Professional:
-- Best: SEB (strong digital, good advisor network)
-- Alternative: Handelsbanken
-Wealthy:
-- Best: Handelsbanken Private Banking
-- Alternative: SEB Private Banking
-- Global: Carnegie, Öhman
+Standard: Swedbank (#1 satisfaction), Länsförsäkringar
+Avoid: Nordea Sweden
+Sources: EPSI Sweden 2025
 
 DENMARK:
-Standard:
-- Best: Lunar Bank (best digital, zero fees)
-- Alternative: Arbejdernes Landsbank
-- Avoid: Danske Bank retail (scandal history, low satisfaction)
-- Source: EPSI Denmark 2025
-Professional:
-- Best: Jyske Bank
-- Alternative: Sydbank
-Wealthy:
-- Best: Saxo Bank (investments + banking)
-- Alternative: Danske Bank Private Banking (better than their retail division)
+Standard: Lunar Bank (best digital), Arbejdernes Landsbank
+Avoid: Danske Bank retail (money laundering scandal)
+Sources: EPSI Denmark 2025
 
 FINLAND:
-Standard:
-- Best: OP Financial Group (cooperative, highest satisfaction Finland)
-- Alternative: Nordea Finland (better here than other Nordics)
-- Source: EPSI Finland 2025
-Wealthy:
-- Best: Evli Bank
-- Alternative: Alexandria
+Standard: OP Financial Group (#1)
+Sources: EPSI Finland 2025
 
-UNITED STATES:
-Standard:
-- Best: Ally Bank (online, zero fees, high savings rates, J.D. Power top rated)
-- Alternative: Charles Schwab Bank (best for travelers - zero ATM fees worldwide)
-- Avoid: Wells Fargo (scandal history, low J.D. Power scores)
-- Source: J.D. Power 2025, Bankrate
-Professional:
-- Best: Chase Sapphire Banking
-- Alternative: Citibank Priority
-Wealthy ($1M+):
-- Best: JP Morgan Private Client
-- Alternative: Goldman Sachs Private Wealth
-- Ultra-wealthy: Northern Trust, Bessemer Trust
+USA:
+Standard: Ally Bank (#1 online, J.D. Power), Charles Schwab (travelers)
+Avoid: Wells Fargo (scandal, low scores)
+Wealthy: JP Morgan Private, Goldman Sachs PWM
+Sources: J.D. Power 2025, Bankrate, Forbes
 
 CANADA:
-Standard:
-- Best: Tangerine (zero fees, good rates)
-- Alternative: EQ Bank (best savings rates)
-- Avoid: Big 5 retail (RBC, TD, BMO, Scotia, CIBC) - high fees
-- Source: J.D. Power Canada 2025
-Wealthy:
-- Best: RBC Wealth Management
-- Alternative: TD Wealth
+Standard: Tangerine, EQ Bank (best savings)
+Avoid: Big 5 (RBC, TD, BMO, Scotia, CIBC) - high fees
+Sources: J.D. Power Canada 2025
 
 AUSTRALIA:
-Standard:
-- Best: ING Australia (Canstar 5-star, zero fees, cashback)
-- Alternative: Up Bank (best app Australia)
-- Avoid: Commonwealth Bank retail (highest fees, Royal Commission findings)
-- Source: Canstar 2025, Roy Morgan
-Professional:
-- Best: Macquarie Bank
-Wealthy:
-- Best: Commonwealth Private (irony - better private than retail)
-- Alternative: ANZ Private
+Standard: ING Australia (Canstar 5-star), Up Bank (best app)
+Avoid: Commonwealth Bank retail
+Sources: Canstar 2025, Roy Morgan
 
-NETHERLANDS:
-Standard:
-- Best: Bunq (best app, sustainable, zero fees for basic)
-- Alternative: ING Netherlands
-- Source: Consumentenbond 2025
+NETHERLANDS: Bunq (best app + sustainable)
+Sources: Consumentenbond 2025
 
-FRANCE:
-Standard:
-- Best: Boursorama (zero fees, best digital bank France)
-- Alternative: Hello bank! (BNP subsidiary)
-- Avoid: Crédit Agricole retail (high fees)
-- Source: UFC-Que Choisir 2025
-Wealthy:
-- Best: BNP Paribas Wealth Management
-- Alternative: Société Générale Private
+FRANCE: Boursorama (#1 digital, zero fees)
+Sources: UFC-Que Choisir 2025
 
-SPAIN:
-Standard:
-- Best: BBVA (best app in Europe 2024, Forrester ranking)
-- Alternative: ING Spain (zero fees)
-- Source: Forrester 2024, OCU Spain
+SPAIN: BBVA (#1 app Europe, Forrester 2024)
+Sources: Forrester 2024, OCU Spain
 
-JAPAN:
-Standard:
-- Best: SBI Sumishin Net Bank (highest satisfaction Japan)
-- Alternative: Rakuten Bank
-- Source: Oricon satisfaction survey 2025
+JAPAN: SBI Sumishin Net Bank (#1)
+Sources: Oricon 2025
 
-GLOBAL / EXPATS / DIGITAL NOMADS:
-- Best: Wise (formerly TransferWise) - best for international transfers, multi-currency, low fees
-- Alternative: Revolut (great app, but customer service issues reported)
-- Also: N26 (EU-based, good for Europe travel)
-- Avoid: Traditional banks for FX - always overcharge on exchange rates
+GLOBAL EXPATS: Wise (#1 transfers), Revolut (good app, service issues)
 
-GLOBAL PRIVATE BANKING (ultra-wealthy):
-Tier 1 (best globally):
-- Julius Baer (Switzerland) - pure private banking, no retail distractions
-- Pictet (Switzerland) - oldest independent private bank
-- Lombard Odier (Switzerland)
-Tier 2:
-- UBS Wealth Management
-- Credit Suisse Private (now merged with UBS)
-- HSBC Private Banking
-Tier 3 (large but good private divisions):
-- JP Morgan Private Bank (USA)
-- Goldman Sachs PWM (USA)
-- Deutsche Bank Wealth Management
+GLOBAL PRIVATE BANKING:
+Tier 1: Julius Baer, Pictet, Lombard Odier (Switzerland)
+Tier 2: UBS Wealth, HSBC Private
+Tier 3: JP Morgan Private, Goldman Sachs PWM, Deutsche Bank Wealth
 
-SEGMENT DETECTION FROM ANY LANGUAGE:
-- Norwegian: vanlig/student/god jobb/rik/formue
-- English: standard/professional/wealthy/rich/HNW
-- German: normal/reich/vermögend
-- Swedish: vanlig/förmögen
-- Danish: almindelig/velhavende
-- French: normal/riche/fortuné
-- Spanish: normal/rico/acaudalado
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEGMENT DETECTION (ALL LANGUAGES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-IMPORTANT BANKING SEGMENT RULE:
-If user does not specify segment, always recommend for STANDARD segment and add this note: "💡 This recommendation is for everyday banking. If you have high income or significant wealth, ask RankFinal for private banking recommendations."
+Norwegian: vanlig/student/god jobb/rik/formue/pensjonist
+English: standard/professional/wealthy/rich/HNW/student/senior
+German: normal/reich/vermögend/Student/Senior
+Swedish: vanlig/förmögen/student/pensionär
+Danish: almindelig/velhavende/studerende
+French: normal/riche/fortuné/étudiant
+Spanish: normal/rico/acaudalado/estudiante
 
-Return this exact JSON:
+DEFAULT: If no segment mentioned → recommend STANDARD + add note:
+"💡 This recommendation is for everyday use. Different profiles may have better options - ask RankFinal for personalized recommendations."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RETURN THIS EXACT JSON FORMAT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 {
-  "query": "user query",
-  "country": "detected country",
+  "query": "original user query",
+  "country": "detected or specified country",
   "best": {
-    "name": "Product Name",
+    "name": "Exact Product/Service Name",
     "score": 9.1,
-    "reason": "Why this wins in 2-3 sentences.",
-    "strengths": ["strength 1", "strength 2", "strength 3"],
-    "weaknesses": ["weakness 1", "weakness 2"],
+    "reason": "2-3 sentences. Confident and direct. Why this wins for this specific user.",
+    "strengths": [
+      "Specific concrete strength 1",
+      "Specific concrete strength 2",
+      "Specific concrete strength 3"
+    ],
+    "weaknesses": [
+      "Honest specific weakness 1",
+      "Honest specific weakness 2"
+    ],
     "price_range": "€X - €Y /month"
   },
   "alternative": {
     "name": "Alternative Name",
-    "score": 8.3,
-    "reason": "Why this is a good alternative.",
-    "good_if": "Choose this if you need X",
+    "score": 8.4,
+    "reason": "One sentence on why this is a solid alternative.",
+    "good_if": "Choose this if you prioritize X over Y",
     "price_range": "€X - €Y /month"
   },
   "avoid": {
-    "name": "What to avoid",
-    "reason": "Honest reason to avoid this."
+    "name": "Product/Provider to avoid",
+    "reason": "Specific honest reason. No sugarcoating."
   },
   "score_breakdown": [
     {"criteria": "Performance", "score": 9.2, "weight": 30},
@@ -384,24 +303,175 @@ Return this exact JSON:
       "country": "NO",
       "date": "2025-11",
       "credibility": 5,
+      "url": "https://real-verified-url.com",
+      "description": "What this source specifically tested or measured"
+    },
+    {
+      "name": "Source Name 2",
+      "country": "XX",
+      "date": "2025-10",
+      "credibility": 4,
       "url": "https://real-url.com",
-      "description": "What this source tested"
+      "description": "What they tested"
+    },
+    {
+      "name": "Source Name 3",
+      "country": "XX",
+      "date": "2025-09",
+      "credibility": 4,
+      "url": "https://real-url.com",
+      "description": "What they tested"
     }
   ],
   "updated_at": "2026-04-26T10:00:00Z"
+}`;
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    const { query, country = "Global" } = await req.json();
+
+    if (typeof query !== "string" || query.trim().length < 2) {
+      return new Response(
+        JSON.stringify({ error: "Query is required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (typeof country !== "string" || country.length > 80) {
+      return new Response(
+        JSON.stringify({ error: "Invalid country" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!anthropicKey) {
+      return new Response(
+        JSON.stringify({ error: "ANTHROPIC_API_KEY is not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // STEP 1: Web search for fresh test data
+    const searchResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": anthropicKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 2000,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        system: `You are a research assistant finding the latest independent test results.
+Search for recent (2024-2026) test data from trusted independent sources.
+
+TRUSTED SOURCES BY CATEGORY:
+Electronics: RTINGS.com, GSMArena, Notebookcheck, Tom's Guide, Which?, Stiftung Warentest, Wirecutter, PCMag
+Insurance Norway: EPSI Norway, Bytt.no, Forsikringtest.no, Finans Norge, Finansportalen.no
+Banking Norway: EPSI Norway, Renteradar.no, Finansportalen.no, Bytt.no, Kortio.no
+Banking Global: J.D. Power, Canstar, Which?, Stiftung Warentest, EPSI Nordic
+Energy Norway: EPSI Norway, Bytt.no, NVE, Forbrukerrådet
+Cars/EV: Motor.no, NAF, What Car, ADAC, Autocar, InsideEVs, Electrek, Bjørn Nyland
+Home appliances: Which?, Stiftung Warentest, RTINGS.com, Wirecutter, Consumer Reports
+Travel insurance: Which?, Forbes, NerdWallet, Money.com
+Sports/Outdoor: OutdoorGearLab, REI, BikeRadar, DC Rainmaker, Gear Junkie
+Baby: Which?, BabyGearLab, ADAC (car seats)
+Health: Which?, Wirecutter, DC Rainmaker, Examine.com
+Pets: DogFoodAdvisor, Canstar, Bytt.no
+Business software: G2.com, Capterra, PCMag
+
+Search for: "${query.trim()} test review 2025 2026 independent best"
+Also search: "${query.trim()} ${country} recommendation expert"
+
+Return ONLY valid JSON:
+{
+  "sources_found": [
+    {
+      "name": "source name",
+      "url": "real url",
+      "country": "country code",
+      "date": "date",
+      "key_finding": "what they found"
+    }
+  ],
+  "top_products": ["product 1", "product 2", "product 3"],
+  "consensus": "what most sources agree on",
+  "latest_data": "any specific numbers, scores, or rankings found"
 }`,
+        messages: [
+          {
+            role: "user",
+            content: `Find latest independent test results for: "${query.trim()}" in ${country}. Focus on 2025-2026 data.`,
+          },
+        ],
+      }),
+    });
+
+    let searchResults: unknown = {
+      sources_found: [],
+      top_products: [],
+      consensus: "",
+      latest_data: "",
+    };
+
+    if (searchResponse.ok) {
+      const searchData = await searchResponse.json();
+      const searchText = searchData.content
+        ?.filter((item: { type?: string }) => item.type === "text")
+        ?.map((item: { text?: string }) => item.text ?? "")
+        ?.join("\n") ?? "";
+      const cleanedSearchText = searchText
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      try {
+        searchResults = JSON.parse(cleanedSearchText);
+      } catch {
+        searchResults = {
+          sources_found: [],
+          top_products: [],
+          consensus: cleanedSearchText.substring(0, 500),
+          latest_data: "",
+        };
+      }
+    }
+
+    // STEP 2: Generate recommendation using search results + knowledge base
+    const recommendationResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": anthropicKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 2000,
+        system: SYSTEM_PROMPT,
         messages: [
           {
             role: "user",
             content: `Query: "${query.trim()}"
 Country: ${country}
 
-Fresh test data found:
-${JSON.stringify(searchResults)}
+Fresh test data found from web search:
+${JSON.stringify(searchResults, null, 2)}
 
-Based on this current data AND your knowledge, give the best recommendation in JSON format.
-Prioritize the fresh search results over your training data when they conflict.
-Use the actual sources found for the sources array.`,
+Instructions:
+1. Use the fresh search data above as primary source when available
+2. Combine with your built-in knowledge base for this category
+3. Prioritize fresh 2025-2026 data over older training data
+4. Use actual source URLs from the search results in the sources array
+5. Give ONE clear recommendation in the exact JSON format specified
+6. Be specific about which customer segment this recommendation suits
+7. Today's date is 2026-04-26`,
           },
         ],
       }),
@@ -409,23 +479,43 @@ Use the actual sources found for the sources array.`,
 
     if (!recommendationResponse.ok) {
       const errorText = await recommendationResponse.text();
-      return new Response(JSON.stringify({ error: "Anthropic API call failed", details: errorText }), {
-        status: recommendationResponse.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Recommendation API call failed", details: errorText }),
+        { status: recommendationResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const data = await recommendationResponse.json();
     const text = data.content?.[0]?.type === "text" ? data.content[0].text : "";
     const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const result = JSON.parse(cleaned);
+
+    let result;
+    try {
+      result = JSON.parse(cleaned);
+    } catch {
+      // Try to extract JSON from the response
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        result = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error("Could not parse JSON response from AI");
+      }
+    }
+
+    // Add timestamp if missing
+    if (!result.updated_at) {
+      result.updated_at = new Date().toISOString();
+    }
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
