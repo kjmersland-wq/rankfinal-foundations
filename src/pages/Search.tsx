@@ -145,9 +145,9 @@ function Results({ result }: { result: RankFinalResult }) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="gray">Country: {result.country}</Badge>
-            <Badge variant="amber">Updated: {new Date(result.updated_at).toLocaleDateString()}</Badge>
+            <span className="inline-flex items-center gap-2 rounded-pill border border-border bg-background px-3 py-1 text-xs font-bold text-text-primary"><span className="size-2 rounded-pill bg-success" /> Analysis complete</span>
             <Button variant="secondary" onClick={() => window.print()}>
-              <Printer className="size-4" /> Print this result
+              <Printer className="size-4" /> Print
             </Button>
           </div>
         </div>
@@ -158,27 +158,30 @@ function Results({ result }: { result: RankFinalResult }) {
           <Card className="print-section border-l-4 border-l-accent-amber shadow-amber">
             <CardHeader>
               <Badge variant="amber">🥇 Best choice</Badge>
-              <CardTitle className="text-3xl">{result.best.name}</CardTitle>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <CardTitle className="text-3xl">{result.best.name}</CardTitle>
+                <span className="rounded-pill bg-accent-amber px-3 py-1 text-sm font-extrabold text-primary-foreground">{result.best.score.toFixed(1)} / 10</span>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <ScoreBar score={result.best.score} />
               <p className="text-base leading-8 text-text-primary">{result.best.reason}</p>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <h3 className="font-bold text-text-primary">Strengths</h3>
+                  <h3 className="font-bold text-success">✓ Strengths</h3>
                   {result.best.strengths.map((strength) => (
                     <p key={strength} className="flex gap-2 text-sm text-text-secondary"><Check className="mt-0.5 size-4 shrink-0 text-success" />{strength}</p>
                   ))}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-text-primary">Weaknesses</h3>
+                  <h3 className="font-bold text-destructive">✗ Weaknesses</h3>
                   {result.best.weaknesses.map((weakness) => (
                     <p key={weakness} className="flex gap-2 text-sm text-text-secondary"><X className="mt-0.5 size-4 shrink-0 text-destructive" />{weakness}</p>
                   ))}
                 </div>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xl font-extrabold text-text-primary">{result.best.price_range}</span>
+                <span className="rounded-pill border border-border bg-background px-4 py-2 text-xl font-extrabold text-text-primary">{result.best.price_range}</span>
                 <Button variant="amber">Check current price <ExternalLink className="size-4" /></Button>
               </div>
             </CardContent>
@@ -192,7 +195,7 @@ function Results({ result }: { result: RankFinalResult }) {
                 <CardDescription>{result.alternative.reason}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="rounded-input bg-background p-3 text-sm font-semibold text-text-primary">Choose this if: {result.alternative.good_if}</p>
+                <p className="rounded-input bg-background p-3 text-sm font-semibold italic text-text-primary">Choose this if: {result.alternative.good_if}</p>
                 <span className="font-extrabold text-text-primary">{result.alternative.price_range}</span>
               </CardContent>
             </Card>
