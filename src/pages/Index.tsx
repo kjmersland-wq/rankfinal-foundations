@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Award, BadgeCheck, CalendarCheck, Earth, ShieldOff } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge, SearchBar } from "@/components/rankfinal/ui";
@@ -127,6 +128,7 @@ function Reveal({ children, className }: { children: React.ReactNode; className?
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const typedText = useTypewriter(typewriterPhrases);
   const tickerItems = useMemo(() => [...updates, ...updates], []);
 
@@ -155,6 +157,7 @@ const Index = () => {
                 key={tag}
                 className="rounded-pill border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-secondary transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-amber/70 hover:text-accent-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 type="button"
+                onClick={() => navigate(`/search?q=${encodeURIComponent(tag)}`)}
               >
                 {tag}
               </button>
