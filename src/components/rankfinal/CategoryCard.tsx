@@ -12,8 +12,8 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category, compact = false, className }: CategoryCardProps) {
   return (
-    <Card className={cn("group h-full overflow-hidden", className)}>
-      <CardContent className={cn("flex h-full flex-col", compact ? "p-4" : "p-5") }>
+    <Card className={cn("group h-full overflow-hidden hover:-translate-y-1", className)}>
+      <CardContent className={cn("flex h-full flex-col", compact ? "p-4" : "p-5")}>
         <div className="mb-5 flex items-start justify-between gap-3">
           <span className="flex size-12 items-center justify-center rounded-card border border-border bg-secondary text-2xl transition-transform duration-300 group-hover:-translate-y-1" aria-hidden="true">
             {category.icon}
