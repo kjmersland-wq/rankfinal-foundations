@@ -25,19 +25,20 @@ export default function Contact() {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form)) as ContactFields;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData) as ContactFields;
     const result = contactSchema.safeParse(data);
 
     if (!result.success) {
-      event.preventDefault();
       setSent(false);
       setErrors(Object.fromEntries(result.error.issues.map((issue) => [issue.path[0], issue.message])) as ContactErrors);
       return;
     }
 
-    event.preventDefault();
+    await fetch(form.action, { method: "POST", body: formData, headers: { Accept: "application/json" } }).catch(() => undefined);
     setErrors({});
     setSent(true);
     form.reset();
