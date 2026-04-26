@@ -3,6 +3,8 @@ import { Award, BadgeCheck, CalendarCheck, Earth, ShieldOff } from "lucide-react
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge, SearchBar } from "@/components/rankfinal/ui";
 import { PageWrapper } from "@/components/rankfinal/layout";
+import { CategoryCard } from "@/components/rankfinal/CategoryCard";
+import { categories } from "@/data/categories";
 import { cn } from "@/lib/utils";
 
 const typewriterPhrases = [
@@ -182,6 +184,25 @@ const Index = () => {
                   <CardDescription>{step.description}</CardDescription>
                 </CardHeader>
               </Card>
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+
+
+      <Reveal>
+        <section className="space-y-6" aria-labelledby="category-grid">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div className="max-w-2xl space-y-3">
+              <Badge variant="amber">Categories</Badge>
+              <h2 id="category-grid" className="text-3xl font-extrabold text-text-primary sm:text-4xl">Browse every ranked category</h2>
+              <p className="text-base leading-7 text-text-secondary">Start with a market, then drill into transparent rankings by country, budget, and update frequency.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
             ))}
           </div>
         </section>
