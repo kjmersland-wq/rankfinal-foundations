@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Check, ExternalLink, Printer, RotateCcw, X } from "lucide-react";
+import { Check, ExternalLink, Printer, RotateCcw, X, Zap } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,19 +25,14 @@ function getCountryFlag(country: string) {
 
 function LoadingResults() {
   return (
-    <PageWrapper className="space-y-8 py-10">
-      <div className="mx-auto max-w-3xl space-y-5 text-center">
-        <Badge variant="amber">AI recommendation engine</Badge>
-        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">Scanning verified sources worldwide...</h1>
-        <div className="mx-auto h-2 max-w-xl overflow-hidden rounded-pill bg-surface shadow-surface">
-          <div className="h-full w-1/2 animate-pulse rounded-pill bg-accent-amber shadow-amber" />
+    <PageWrapper className="flex min-h-[60vh] items-center justify-center py-16">
+      <div className="mx-auto w-full max-w-xl space-y-6 text-center">
+        <div className="mx-auto flex size-16 animate-pulse items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber shadow-amber">
+          <Zap className="size-8" aria-hidden="true" />
         </div>
-      </div>
-      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
-        <Card className="min-h-80 animate-pulse border-l-4 border-l-accent-amber" />
-        <div className="space-y-6">
-          <Card className="h-44 animate-pulse border-l-4 border-l-accent-purple" />
-          <Card className="h-36 animate-pulse border-l-4 border-l-destructive" />
+        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">Scanning verified sources worldwide...</h1>
+        <div className="h-1.5 overflow-hidden rounded-pill bg-surface shadow-surface">
+          <div className="h-full w-1/2 animate-pulse rounded-pill bg-accent-amber shadow-amber" />
         </div>
       </div>
     </PageWrapper>
