@@ -9,6 +9,7 @@ const navItems = [
   { label: "Browse", href: "/browse" },
   { label: "Pricing", href: "/pricing" },
   { label: "Help", href: "/help" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
