@@ -18,6 +18,7 @@ const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Help = lazy(() => import("./pages/Help.tsx"));
 const HelpArticle = lazy(() => import("./pages/HelpArticle.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
+const Contact = lazy(() => import("./pages/Contact.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const LegalPage = lazy(() => import("./pages/LegalPage.tsx").then((module) => ({ default: module.LegalPage })));
 
@@ -48,6 +49,7 @@ const App = () => (
                 <Route path="/help" element={<Help />} />
                 <Route path="/help/:slug" element={<HelpArticle />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<LegalPage kind="privacy" />} />
                 <Route path="/terms" element={<LegalPage kind="terms" />} />
                 <Route path="/cookies" element={<LegalPage kind="cookies" />} />
