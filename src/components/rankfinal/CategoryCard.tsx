@@ -12,10 +12,10 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category, compact = false, className }: CategoryCardProps) {
   return (
-    <Card className={cn("group h-full overflow-hidden hover:-translate-y-1", className)}>
+    <Card className={cn("group h-full overflow-hidden hover:-translate-y-1 hover:shadow-amber", className)}>
       <CardContent className={cn("flex h-full flex-col", compact ? "p-4" : "p-5")}>
         <div className="mb-5 flex items-start justify-between gap-3">
-          <span className="flex size-12 items-center justify-center rounded-card border border-border bg-secondary text-2xl transition-transform duration-300 group-hover:-translate-y-1" aria-hidden="true">
+          <span className="flex size-12 items-center justify-center rounded-card border border-border bg-secondary text-2xl transition-transform duration-300 group-hover:-translate-y-1 hover:shadow-amber" aria-hidden="true">
             {category.icon}
           </span>
           <span className="rounded-pill border border-border bg-background px-3 py-1 text-xs font-semibold text-text-secondary">

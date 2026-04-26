@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RankFinal Offline</title>
+    <style>
+      body { margin: 0; background: #0A0A0F; color: #F8F8FF; font-family: Inter, system-ui, sans-serif; }
+      main { max-width: 760px; margin: 0 auto; padding: 64px 20px; }
+      h1 { font-size: 40px; margin: 0 0 12px; }
+      p { color: #9CA3AF; line-height: 1.7; }
+      a, li { color: #F5A623; }
+      .card { border: 1px solid #1E1E2E; background: #12121A; border-radius: 12px; padding: 20px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <h1>You're offline.</h1>
+        <p>Here are your recently viewed results.</p>
+        <ul id="recent"></ul>
+      </div>
+    </main>
+    <script>
+      const recent = JSON.parse(localStorage.getItem("rankfinal_recent_searches") || "[]");
+      const list = document.getElementById("recent");
+      list.innerHTML = recent.length ? recent.map((item) => `<li>${item}</li>`).join("") : "<li>No cached results yet.</li>";
+    </script>
+  </body>
+</html>
