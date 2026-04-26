@@ -35,8 +35,75 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const searchResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": anthropicKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 2000,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        system: `You are a research assistant finding the latest independent test results and reviews.
+Search for recent (2024-2026) test data from trusted sources only:
+- Electronics: RTINGS.com, GSMArena, Notebookcheck, Tom's Guide, Which?, Stiftung Warentest
+- Insurance Norway: EPSI Norway, Bytt.no, Forsikringtest.no, Finans Norge
+- Banking Norway: EPSI Norway, Renteradar.no, Finansportalen.no, Bytt.no
+- Banking Global: J.D. Power, Canstar, Which?
+- Energy Norway: EPSI Norway, Bytt.no, NVE
+- Cars/EV: Motor.no, What Car, Autocar, ADAC
+- Home appliances: Which?, Stiftung Warentest, RTINGS.com, Wirecutter
+- Travel insurance: Which?, Forbes, NerdWallet
+- Sports/Outdoor: OutdoorGearLab, REI, MEC
+
+Search for: "[query] test review 2025 2026 independent"
+
+Return ONLY valid JSON, no markdown:
+{
+  "sources_found": [
+    {
+      "name": "source name",
+      "url": "url",
+      "country": "country code",
+      "date": "date found",
+      "key_finding": "what they found"
+    }
+  ],
+  "top_products": ["product 1", "product 2"],
+  "consensus": "what most sources agree on"
+}`,
+        messages: [
+          {
+            role: "user",
+            content: `Find latest test results for: "${query.trim()}" in ${country}`,
+          },
+        ],
+      }),
+    });
+
+    if (!searchResponse.ok) {
+      const errorText = await searchResponse.text();
+      return new Response(JSON.stringify({ error: "Anthropic web search failed", details: errorText }), {
+        status: searchResponse.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const searchData = await searchResponse.json();
+    const searchText = searchData.content?.filter((item: { type?: string }) => item.type === "text")?.map((item: { text?: string }) => item.text ?? "")?.join("\n") ?? "";
+    const cleanedSearchText = searchText.replace(/```json/g, "").replace(/```/g, "").trim();
+    let searchResults: unknown;
+
+    try {
+      searchResults = JSON.parse(cleanedSearchText);
+    } catch {
+      searchResults = { sources_found: [], top_products: [], consensus: cleanedSearchText };
+    }
     
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const recommendationResponse = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -326,21 +393,29 @@ Return this exact JSON:
         messages: [
           {
             role: "user",
-            content: `Query: "${query.trim()}"\nCountry: ${country}\n\nAnalyze and recommend.`,
+            content: `Query: "${query.trim()}"
+Country: ${country}
+
+Fresh test data found:
+${JSON.stringify(searchResults)}
+
+Based on this current data AND your knowledge, give the best recommendation in JSON format.
+Prioritize the fresh search results over your training data when they conflict.
+Use the actual sources found for the sources array.`,
           },
         ],
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
+    if (!recommendationResponse.ok) {
+      const errorText = await recommendationResponse.text();
       return new Response(JSON.stringify({ error: "Anthropic API call failed", details: errorText }), {
-        status: response.status,
+        status: recommendationResponse.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const data = await response.json();
+    const data = await recommendationResponse.json();
     const text = data.content?.[0]?.type === "text" ? data.content[0].text : "";
     const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const result = JSON.parse(cleaned);

@@ -55,14 +55,16 @@ function getCountryFlag(country: string) {
   return flags[code] ?? "🌐";
 }
 
-function LoadingResults() {
+function LoadingResults({ step }: { step: 1 | 2 }) {
+  const message = step === 1 ? "Step 1/2: Searching verified sources worldwide..." : "Step 2/2: Analyzing and ranking results...";
+
   return (
     <PageWrapper className="flex min-h-[60vh] items-center justify-center py-16">
       <div className="mx-auto w-full max-w-xl space-y-6 text-center">
         <div className="mx-auto flex size-16 animate-pulse items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber shadow-amber">
           <Zap className="size-8" aria-hidden="true" />
         </div>
-        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">Scanning verified sources worldwide...</h1>
+        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">{message}</h1>
         <div className="h-1.5 overflow-hidden rounded-pill bg-surface shadow-surface">
           <div className="h-full w-1/2 animate-pulse rounded-pill bg-accent-amber shadow-amber" />
         </div>
@@ -273,12 +275,14 @@ function SearchPageContent() {
   const country = params.get("country") ?? "Global";
   const [result, setResult] = useState<RankFinalResult | null>(null);
   const [loading, setLoading] = useState(Boolean(query));
+  const [loadingStep, setLoadingStep] = useState<1 | 2>(1);
   const [error, setError] = useState(false);
   const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
 
   const loadRecommendation = useCallback(async () => {
     if (!query) return;
     setLoading(true);
+    setLoadingStep(1);
     setError(false);
     setResult(null);
 
@@ -298,6 +302,12 @@ function SearchPageContent() {
   useEffect(() => {
     void loadRecommendation();
   }, [loadRecommendation]);
+
+  useEffect(() => {
+    if (!loading) return;
+    const timer = window.setTimeout(() => setLoadingStep(2), 4500);
+    return () => window.clearTimeout(timer);
+  }, [loading]);
 
   useEffect(() => {
     if (!query) return;
@@ -324,7 +334,7 @@ function SearchPageContent() {
   }, [country, query]);
 
   if (!query) return <EmptySearch />;
-  if (loading) return <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults /></>;
+  if (loading) return <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults step={loadingStep} /></>;
   if (error || !result) return <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>;
   return <>{showUpgradeBanner && <UpgradeBanner />}<Results result={result} /></>;
 }
