@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2023-10-16",
 });
 
 export default async function handler(req: any, res: any) {
@@ -10,7 +10,6 @@ export default async function handler(req: any, res: any) {
   }
 
   const { priceId } = req.body;
-
   if (!priceId) {
     return res.status(400).json({ error: "Missing priceId" });
   }
@@ -24,7 +23,6 @@ export default async function handler(req: any, res: any) {
       cancel_url: "https://rankfinal.com/pricing",
       automatic_tax: { enabled: true },
     });
-
     res.status(200).json({ url: session.url });
   } catch (error: any) {
     console.error("Stripe error:", error);
