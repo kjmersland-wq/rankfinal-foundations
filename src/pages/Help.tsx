@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Mail, Search } from "lucide-react";
+import { ArrowRight, MessageSquare, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/rankfinal/ui";
 import { PageWrapper } from "@/components/rankfinal/layout";
@@ -50,14 +51,13 @@ export default function Help() {
 
         <Card className="border-accent-amber/50">
           <CardHeader>
-            <div className="flex size-12 items-center justify-center rounded-card bg-accent-amber/15 text-accent-amber"><Mail className="size-6" /></div>
+            <div className="flex size-12 items-center justify-center rounded-card bg-accent-amber/15 text-accent-amber"><MessageSquare className="size-6" /></div>
             <CardTitle>Contact support</CardTitle>
             <CardDescription>Real help from the RankFinal team.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm leading-6 text-text-secondary">
-            <p><span className="font-bold text-text-primary">Email:</span> support@rankfinal.com</p>
             <p><span className="font-bold text-text-primary">Response time:</span> &lt; 24 hours (Pro: &lt; 4 hours)</p>
-            <p><span className="font-bold text-text-primary">For business inquiries:</span> hello@rankfinal.com</p>
+            <Button asChild variant="amber" size="pill"><Link to="/contact">Send us a message <ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
           </CardContent>
         </Card>
       </section>
