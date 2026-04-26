@@ -1,11 +1,43 @@
 import { Component, type ReactNode, useCallback, useEffect, useState } from "react";
 import { Check, ExternalLink, Printer, RotateCcw, X, Zap } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge, ScoreBar, SearchBar } from "@/components/rankfinal/ui";
 import { PageWrapper } from "@/components/rankfinal/layout";
 import { getRankFinalRecommendation, type RankFinalResult } from "@/lib/rankfinal-ai";
+
+const FREE_SEARCH_LIMIT = 5;
+const FREE_SEARCH_USAGE_KEY = "rankfinal_free_search_usage";
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function recordFreeSearch() {
+  try {
+    const today = todayKey();
+    const stored = JSON.parse(localStorage.getItem(FREE_SEARCH_USAGE_KEY) || "{}") as { date?: string; count?: number };
+    const count = stored.date === today ? (stored.count ?? 0) + 1 : 1;
+    localStorage.setItem(FREE_SEARCH_USAGE_KEY, JSON.stringify({ date: today, count }));
+    return count;
+  } catch {
+    return 1;
+  }
+}
+
+function UpgradeBanner() {
+  return (
+    <PageWrapper className="pt-5">
+      <div className="flex flex-col gap-3 rounded-card border border-accent-amber/40 bg-accent-amber/15 p-4 shadow-amber sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-bold text-text-primary">You've used your 5 free searches today. Upgrade to Pro for unlimited access.</p>
+        <Button asChild variant="amber" className="shrink-0">
+          <Link to="/pricing">Upgrade to Pro €9/month →</Link>
+        </Button>
+      </div>
+    </PageWrapper>
+  );
+}
 
 function getCountryFlag(country: string) {
   const code = country.trim().slice(0, 2).toUpperCase();
@@ -242,6 +274,7 @@ function SearchPageContent() {
   const [result, setResult] = useState<RankFinalResult | null>(null);
   const [loading, setLoading] = useState(Boolean(query));
   const [error, setError] = useState(false);
+  const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
 
   const loadRecommendation = useCallback(async () => {
     if (!query) return;
@@ -250,6 +283,8 @@ function SearchPageContent() {
     setResult(null);
 
     try {
+      const usageCount = recordFreeSearch();
+      setShowUpgradeBanner(usageCount >= FREE_SEARCH_LIMIT);
       const recommendation = await getRankFinalRecommendation(query, country);
       setResult(recommendation);
     } catch (loadError) {
@@ -265,9 +300,9 @@ function SearchPageContent() {
   }, [loadRecommendation]);
 
   if (!query) return <EmptySearch />;
-  if (loading) return <LoadingResults />;
-  if (error || !result) return <ErrorState onRetry={loadRecommendation} />;
-  return <Results result={result} />;
+  if (loading) return <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults /></>;
+  if (error || !result) return <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>;
+  return <>{showUpgradeBanner && <UpgradeBanner />}<Results result={result} /></>;
 }
 
 export default function SearchPage() {

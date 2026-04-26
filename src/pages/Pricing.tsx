@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Check, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/rankfinal/ui";
 import { PageWrapper } from "@/components/rankfinal/layout";
 import { cn } from "@/lib/utils";
+import { PLANS } from "@/lib/stripe";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 const plans = [
   {
@@ -81,8 +84,24 @@ function MatrixValue({ value }: { value: string | boolean }) {
 }
 
 export default function Pricing() {
+  const navigate = useNavigate();
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+  const { openCheckout, closeCheckout, isOpen, checkoutElement } = useStripeCheckout();
+
+  const startCheckout = (planName: string) => {
+    if (planName === "Free") {
+      navigate("/");
+      return;
+    }
+
+    const priceId = planName === "Pro"
+      ? annual ? PLANS.pro.stripe_yearly_price_id : PLANS.pro.stripe_monthly_price_id
+      : annual ? PLANS.business.stripe_yearly_price_id : PLANS.business.stripe_monthly_price_id;
+
+    if (!priceId) return;
+    openCheckout({ priceId, quantity: 1, returnUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}` });
+  };
 
   return (
     <PageWrapper className="space-y-16 py-10 lg:py-16">
@@ -98,10 +117,21 @@ export default function Pricing() {
         </div>
       </section>
 
+      {isOpen && (
+        <section className="rounded-card border border-border bg-surface p-4 shadow-surface" aria-label="Checkout">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="text-xl font-extrabold text-text-primary">Complete your subscription</h2>
+            <Button variant="secondary" onClick={closeCheckout}>Close</Button>
+          </div>
+          {checkoutElement}
+        </section>
+      )}
+
       <section className="grid gap-5 lg:grid-cols-3" aria-label="Pricing plans">
         {plans.map((plan) => (
-          <Card key={plan.name} className={cn("relative flex flex-col", plan.featured && "border-accent-amber shadow-amber lg:-translate-y-3")}>
+          <Card key={plan.name} className={cn("relative flex flex-col", plan.name === "Free" && "border-accent-purple", plan.featured && "border-accent-amber shadow-amber lg:-translate-y-3")}>
             {plan.featured && <Badge variant="amber" className="absolute right-5 top-5">Most popular</Badge>}
+            {plan.name === "Free" && <Badge variant="gray" className="absolute right-5 top-5">Current plan</Badge>}
             <CardHeader className="space-y-4">
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <div>
@@ -114,7 +144,14 @@ export default function Pricing() {
                 {plan.included.map((feature) => <FeatureRow key={feature} included>{feature}</FeatureRow>)}
                 {plan.excluded.map((feature) => <FeatureRow key={feature} included={false}>{feature}</FeatureRow>)}
               </ul>
-              <Button variant={plan.variant} size="lg" className="mt-auto w-full">{plan.button}</Button>
+              <Button variant={plan.name === "Free" ? "ghost" : plan.variant} size="lg" className="mt-auto w-full" onClick={() => startCheckout(plan.name)}>
+                {plan.name === "Free" ? "Get started free" : plan.name === "Business" ? (annual ? "Start Business yearly" : "Start Business monthly") : plan.button}
+              </Button>
+              {plan.name === "Business" && (
+                <Button asChild variant="secondary" size="lg" className="w-full">
+                  <Link to="/contact">Contact us</Link>
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}
