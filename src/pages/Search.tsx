@@ -274,6 +274,7 @@ function SearchPageContent() {
   const [result, setResult] = useState<RankFinalResult | null>(null);
   const [loading, setLoading] = useState(Boolean(query));
   const [error, setError] = useState(false);
+  const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
 
   const loadRecommendation = useCallback(async () => {
     if (!query) return;
@@ -282,6 +283,8 @@ function SearchPageContent() {
     setResult(null);
 
     try {
+      const usageCount = recordFreeSearch();
+      setShowUpgradeBanner(usageCount >= FREE_SEARCH_LIMIT);
       const recommendation = await getRankFinalRecommendation(query, country);
       setResult(recommendation);
     } catch (loadError) {
@@ -297,9 +300,9 @@ function SearchPageContent() {
   }, [loadRecommendation]);
 
   if (!query) return <EmptySearch />;
-  if (loading) return <LoadingResults />;
-  if (error || !result) return <ErrorState onRetry={loadRecommendation} />;
-  return <Results result={result} />;
+  if (loading) return <><UpgradeBanner />{showUpgradeBanner && null}<LoadingResults /></>;
+  if (error || !result) return <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>;
+  return <>{showUpgradeBanner && <UpgradeBanner />}<Results result={result} /></>;
 }
 
 export default function SearchPage() {
