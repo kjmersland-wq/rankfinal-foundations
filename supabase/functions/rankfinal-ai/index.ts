@@ -118,6 +118,169 @@ GLOBAL BANK SEGMENT EXAMPLES:
 - USA: Ally Bank for standard customers, JP Morgan Private Client for wealthy customers
 - Global wealthy: Julius Baer, UBS, Credit Suisse Private Banking
 
+GLOBAL BANKING KNOWLEDGE BY COUNTRY AND SEGMENT:
+
+UNITED KINGDOM:
+Standard/Average:
+- Best: Monzo (app-based, zero fees, instant notifications)
+- Alternative: Starling Bank (best customer service UK)
+- Avoid: HSBC retail, Barclays (high fees, poor service)
+- Source: Which? Magazine 2025, Trustpilot UK
+Professional (£50k-150k):
+- Best: First Direct (consistently #1 UK satisfaction)
+- Alternative: Starling Business
+- Consider: Marcus by Goldman Sachs (savings rates)
+Wealthy (£150k+):
+- Best: Coutts (oldest private bank, Royal family bank)
+- Alternative: HSBC Premier, Barclays Premier
+- Global: Julius Baer, Pictet
+
+GERMANY:
+Standard:
+- Best: ING Deutschland (highest satisfaction, zero fees, good app)
+- Alternative: DKB (Deutsche Kreditbank - excellent free account)
+- Avoid: Deutsche Bank retail (high fees)
+- Source: Stiftung Warentest 2025
+Professional:
+- Best: Commerzbank (good digital + branches)
+- Alternative: Comdirect
+Wealthy:
+- Best: Deutsche Bank Private Wealth Management
+- Alternative: Berenberg Bank (oldest private bank)
+- Global option: UBS Germany
+
+SWEDEN:
+Standard:
+- Best: Swedbank (highest satisfaction Sweden)
+- Alternative: Länsförsäkringar Bank
+- Avoid: Nordea Sweden (low satisfaction scores)
+- Source: EPSI Sweden 2025
+Professional:
+- Best: SEB (strong digital, good advisor network)
+- Alternative: Handelsbanken
+Wealthy:
+- Best: Handelsbanken Private Banking
+- Alternative: SEB Private Banking
+- Global: Carnegie, Öhman
+
+DENMARK:
+Standard:
+- Best: Lunar Bank (best digital, zero fees)
+- Alternative: Arbejdernes Landsbank
+- Avoid: Danske Bank retail (scandal history, low satisfaction)
+- Source: EPSI Denmark 2025
+Professional:
+- Best: Jyske Bank
+- Alternative: Sydbank
+Wealthy:
+- Best: Saxo Bank (investments + banking)
+- Alternative: Danske Bank Private Banking (better than their retail division)
+
+FINLAND:
+Standard:
+- Best: OP Financial Group (cooperative, highest satisfaction Finland)
+- Alternative: Nordea Finland (better here than other Nordics)
+- Source: EPSI Finland 2025
+Wealthy:
+- Best: Evli Bank
+- Alternative: Alexandria
+
+UNITED STATES:
+Standard:
+- Best: Ally Bank (online, zero fees, high savings rates, J.D. Power top rated)
+- Alternative: Charles Schwab Bank (best for travelers - zero ATM fees worldwide)
+- Avoid: Wells Fargo (scandal history, low J.D. Power scores)
+- Source: J.D. Power 2025, Bankrate
+Professional:
+- Best: Chase Sapphire Banking
+- Alternative: Citibank Priority
+Wealthy ($1M+):
+- Best: JP Morgan Private Client
+- Alternative: Goldman Sachs Private Wealth
+- Ultra-wealthy: Northern Trust, Bessemer Trust
+
+CANADA:
+Standard:
+- Best: Tangerine (zero fees, good rates)
+- Alternative: EQ Bank (best savings rates)
+- Avoid: Big 5 retail (RBC, TD, BMO, Scotia, CIBC) - high fees
+- Source: J.D. Power Canada 2025
+Wealthy:
+- Best: RBC Wealth Management
+- Alternative: TD Wealth
+
+AUSTRALIA:
+Standard:
+- Best: ING Australia (Canstar 5-star, zero fees, cashback)
+- Alternative: Up Bank (best app Australia)
+- Avoid: Commonwealth Bank retail (highest fees, Royal Commission findings)
+- Source: Canstar 2025, Roy Morgan
+Professional:
+- Best: Macquarie Bank
+Wealthy:
+- Best: Commonwealth Private (irony - better private than retail)
+- Alternative: ANZ Private
+
+NETHERLANDS:
+Standard:
+- Best: Bunq (best app, sustainable, zero fees for basic)
+- Alternative: ING Netherlands
+- Source: Consumentenbond 2025
+
+FRANCE:
+Standard:
+- Best: Boursorama (zero fees, best digital bank France)
+- Alternative: Hello bank! (BNP subsidiary)
+- Avoid: Crédit Agricole retail (high fees)
+- Source: UFC-Que Choisir 2025
+Wealthy:
+- Best: BNP Paribas Wealth Management
+- Alternative: Société Générale Private
+
+SPAIN:
+Standard:
+- Best: BBVA (best app in Europe 2024, Forrester ranking)
+- Alternative: ING Spain (zero fees)
+- Source: Forrester 2024, OCU Spain
+
+JAPAN:
+Standard:
+- Best: SBI Sumishin Net Bank (highest satisfaction Japan)
+- Alternative: Rakuten Bank
+- Source: Oricon satisfaction survey 2025
+
+GLOBAL / EXPATS / DIGITAL NOMADS:
+- Best: Wise (formerly TransferWise) - best for international transfers, multi-currency, low fees
+- Alternative: Revolut (great app, but customer service issues reported)
+- Also: N26 (EU-based, good for Europe travel)
+- Avoid: Traditional banks for FX - always overcharge on exchange rates
+
+GLOBAL PRIVATE BANKING (ultra-wealthy):
+Tier 1 (best globally):
+- Julius Baer (Switzerland) - pure private banking, no retail distractions
+- Pictet (Switzerland) - oldest independent private bank
+- Lombard Odier (Switzerland)
+Tier 2:
+- UBS Wealth Management
+- Credit Suisse Private (now merged with UBS)
+- HSBC Private Banking
+Tier 3 (large but good private divisions):
+- JP Morgan Private Bank (USA)
+- Goldman Sachs PWM (USA)
+- Deutsche Bank Wealth Management
+
+SEGMENT DETECTION FROM ANY LANGUAGE:
+- Norwegian: vanlig/student/god jobb/rik/formue
+- English: standard/professional/wealthy/rich/HNW
+- German: normal/reich/vermögend
+- Swedish: vanlig/förmögen
+- Danish: almindelig/velhavende
+- French: normal/riche/fortuné
+- Spanish: normal/rico/acaudalado
+
+IMPORTANT BANKING SEGMENT RULE:
+If user does not specify segment, always recommend for STANDARD segment and add this note: "💡 This recommendation is for everyday banking. If you have high income or significant wealth, ask RankFinal for private banking recommendations."
+
 Return this exact JSON:
 {
   "query": "user query",
