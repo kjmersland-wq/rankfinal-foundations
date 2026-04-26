@@ -1,0 +1,17 @@
+{
+  "name": "RankFinal",
+  "short_name": "RankFinal",
+  "description": "RankFinal ranking foundation",
+  "theme_color": "#0A0A0F",
+  "background_color": "#0A0A0F",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
