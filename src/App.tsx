@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer, Nav } from "@/components/rankfinal/layout";
 import Index from "./pages/Index.tsx";
+import Browse from "./pages/Browse.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 
@@ -21,7 +22,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<PlaceholderPage title="Search" />} />
-            <Route path="/browse" element={<PlaceholderPage title="Browse" />} />
+            <Route path="/browse" element={<Browse />} />
             <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
             <Route path="/help" element={<PlaceholderPage title="Help" />} />
             <Route path="/about" element={<PlaceholderPage title="About" />} />
