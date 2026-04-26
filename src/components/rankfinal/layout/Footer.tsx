@@ -4,7 +4,7 @@ import { Zap } from "lucide-react";
 const columns = [
   { title: "Explore", links: [{ label: "Browse", href: "/browse" }, { label: "Search", href: "/search" }, { label: "Pricing", href: "/pricing" }] },
   { title: "Company", links: [{ label: "About", href: "/about" }, { label: "Help", href: "/help" }] },
-  { title: "Legal", links: [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }] },
+  { title: "Legal", links: [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "Cookies", href: "/cookies" }, { label: "Disclaimer", href: "/disclaimer" }] },
 ];
 
 export function Footer() {
