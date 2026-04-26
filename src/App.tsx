@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/rankfinal/ScrollToTop";
 import { AddToHomePrompt } from "@/components/rankfinal/AddToHomePrompt";
 import { RouteShell } from "@/components/rankfinal/RouteShell";
 import { LoadingSkeleton } from "@/components/rankfinal/ui";
+import { PaymentTestModeBanner } from "@/components/payments/PaymentTestModeBanner";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Browse = lazy(() => import("./pages/Browse.tsx"));
@@ -19,6 +20,8 @@ const Help = lazy(() => import("./pages/Help.tsx"));
 const HelpArticle = lazy(() => import("./pages/HelpArticle.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
+const Success = lazy(() => import("./pages/Success.tsx"));
+const Cancel = lazy(() => import("./pages/Cancel.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const LegalPage = lazy(() => import("./pages/LegalPage.tsx").then((module) => ({ default: module.LegalPage })));
 
@@ -38,6 +41,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="min-h-screen bg-background text-foreground">
+          <PaymentTestModeBanner />
           <Nav />
           <RouteShell>
             <Suspense fallback={routeFallback}>
@@ -50,6 +54,8 @@ const App = () => (
                 <Route path="/help/:slug" element={<HelpArticle />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/success" element={<Success />} />
+                <Route path="/cancel" element={<Cancel />} />
                 <Route path="/privacy" element={<LegalPage kind="privacy" />} />
                 <Route path="/terms" element={<LegalPage kind="terms" />} />
                 <Route path="/cookies" element={<LegalPage kind="cookies" />} />
