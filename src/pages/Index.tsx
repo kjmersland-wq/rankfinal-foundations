@@ -24,11 +24,11 @@ const trendingTags = [
 ];
 
 const trustStats = [
-  { icon: Earth, label: "50+ countries" },
-  { icon: Award, label: "10,000+ verified tests" },
+  { icon: Earth, value: 50, suffix: "+", text: "countries" },
+  { icon: Award, value: 10000, suffix: "+", text: "verified tests" },
   { icon: ShieldOff, label: "No sponsored content" },
   { icon: CalendarCheck, label: "Updated daily" },
-  { icon: BadgeCheck, label: "100% independent" },
+  { icon: BadgeCheck, value: 100, suffix: "%", text: "independent" },
 ];
 
 const steps = [
@@ -86,6 +86,33 @@ function useTypewriter(words: string[]) {
   }, [deleting, visibleLength, wordIndex, words]);
 
   return words[wordIndex].slice(0, visibleLength);
+}
+
+function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      let frame = 0;
+      const total = 50;
+      const tick = () => {
+        frame += 1;
+        const progress = 1 - Math.pow(1 - frame / total, 3);
+        setDisplay(Math.round(value * Math.min(progress, 1)));
+        if (frame < total) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      observer.unobserve(entry.target);
+    }, { threshold: 0.6 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [value]);
+
+  return <span ref={ref}>{display.toLocaleString()}{suffix}</span>;
 }
 
 function Reveal({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -156,14 +183,20 @@ const Index = () => {
 
       <Reveal>
         <section className="grid gap-3 rounded-card border border-border bg-surface p-3 shadow-surface sm:grid-cols-2 lg:grid-cols-5" aria-label="Trust indicators">
-          {trustStats.map(({ icon: Icon, label }) => (
-            <div key={label} className="flex items-center gap-3 rounded-input px-3 py-4 transition-colors hover:bg-secondary">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber">
-                <Icon className="size-5" aria-hidden="true" />
-              </span>
-              <span className="text-sm font-bold text-text-primary">{label}</span>
-            </div>
-          ))}
+          {trustStats.map((stat) => {
+            const Icon = stat.icon;
+            const label = "label" in stat ? stat.label : `${stat.value}${stat.suffix} ${stat.text}`;
+            return (
+              <div key={label} className="flex items-center gap-3 rounded-input px-3 py-4 transition-colors hover:bg-secondary">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber">
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <span className="text-sm font-bold text-text-primary">
+                  {"value" in stat ? <><CountUp value={stat.value} suffix={stat.suffix} /> {stat.text}</> : stat.label}
+                </span>
+              </div>
+            );
+          })}
         </section>
       </Reveal>
 
