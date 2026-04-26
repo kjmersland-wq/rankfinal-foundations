@@ -39,29 +39,27 @@ export function Nav() {
           </span>
           RankFinal
         </Link>
-
         <div className="hidden min-w-0 flex-1 justify-center md:flex">
           <SearchBar containerClassName="max-w-md lg:max-w-xl" />
         </div>
-
         <div className="hidden items-center gap-5 lg:flex">
-          {navItems.map((item) => <NavLink key={item.href} to={item.href} className={navLinkClass}>{item.label}</NavLink>)}
-          <NavLink to="/about" className={navLinkClass}>Sign In</NavLink>
+          {navItems.map((item) => (
+            <NavLink key={item.href} to={item.href} className={navLinkClass}>{item.label}</NavLink>
+          ))}
+          <NavLink to="/signin" className={navLinkClass}>Sign In</NavLink>
           <Link to="/pricing" className="rounded-pill border border-border bg-secondary px-2.5 py-1 text-xs font-bold text-text-secondary transition-colors hover:border-accent-amber hover:text-accent-amber">Free</Link>
           <Button asChild variant="amber" size="pill"><Link to="/pricing">Get Pro <ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
         </div>
-
         <button className="ml-auto rounded-input border border-border bg-surface p-2 text-text-primary transition-colors hover:border-accent-amber/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden" type="button" onClick={() => setOpen((value) => !value)} aria-label="Toggle navigation menu" aria-expanded={open}>
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </nav>
-
       {open && (
         <div className="fixed inset-x-0 top-16 z-50 min-h-[calc(100vh-4rem)] border-t border-border bg-background px-4 py-6 animate-slide-in-menu lg:hidden">
           <div className="mx-auto flex max-w-[1280px] flex-col gap-6">
             <SearchBar />
             <div className="flex flex-col gap-1">
-              {[...navItems, { label: "Sign In", href: "/about" }, { label: "Free plan", href: "/pricing" }].map((item) => (
+              {[...navItems, { label: "Sign In", href: "/signin" }, { label: "Free plan", href: "/pricing" }].map((item) => (
                 <NavLink key={item.href} to={item.href} className="rounded-input px-3 py-3 text-lg font-semibold text-text-primary hover:bg-surface" onClick={() => setOpen(false)}>{item.label}</NavLink>
               ))}
             </div>
