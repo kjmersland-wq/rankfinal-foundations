@@ -1,4 +1,6 @@
-import { Mail, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/rankfinal/ui";
 import { PageWrapper } from "@/components/rankfinal/layout";
@@ -100,8 +102,8 @@ export default function About() {
         <Card>
           <CardHeader><Badge variant="amber">Contact</Badge><CardTitle>Reach the RankFinal team</CardTitle></CardHeader>
           <CardContent className="space-y-4 text-sm leading-7 text-text-secondary">
-            <p className="flex items-center gap-3"><Mail className="size-4 text-accent-amber" /><span><strong className="text-text-primary">General:</strong> hello@rankfinal.com</span></p>
-            <p className="flex items-center gap-3"><Mail className="size-4 text-accent-amber" /><span><strong className="text-text-primary">Support:</strong> support@rankfinal.com</span></p>
+            <p className="flex items-center gap-3"><MessageSquare className="size-4 text-accent-amber" /><span>Have a question or partnership inquiry?</span></p>
+            <Button asChild variant="amber" size="pill"><Link to="/contact">Contact us <ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
           </CardContent>
         </Card>
       </section>
