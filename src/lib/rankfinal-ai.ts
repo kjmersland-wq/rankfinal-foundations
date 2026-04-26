@@ -40,8 +40,7 @@ export async function getRankFinalRecommendation(
   query: string,
   country: string = "Global"
 ): Promise<RankFinalResult> {
-  const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/rankfinal-ai`;
-  const response = await fetch(functionUrl, {
+  const response = await fetch("/api/rankfinal-ai", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +50,7 @@ export async function getRankFinalRecommendation(
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("Edge function error:", errorText);
+    console.error("RankFinal API error:", errorText);
     throw new Error("API call failed: " + errorText);
   }
 
