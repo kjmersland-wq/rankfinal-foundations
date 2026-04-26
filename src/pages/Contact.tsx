@@ -50,6 +50,7 @@ export default function Contact() {
         <header className="space-y-4 text-center">
           <Badge variant="amber">Contact</Badge>
           <h1 className="text-4xl font-extrabold tracking-tight text-text-primary sm:text-6xl">Send us a message</h1>
+          <p className="mx-auto max-w-2xl rounded-card border border-accent-amber/50 bg-accent-amber/10 px-4 py-3 text-base font-bold text-text-primary">Interested in Pro or Business? Send us a message and we'll get you set up.</p>
           <p className="mx-auto max-w-2xl text-lg leading-8 text-text-secondary">Questions, support requests, partnerships, and press inquiries go straight to the RankFinal team at KM TECH LABS in Kristiansand, Norway.</p>
         </header>
 
