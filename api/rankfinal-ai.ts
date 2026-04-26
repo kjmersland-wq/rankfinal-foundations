@@ -141,10 +141,9 @@ export default async function handler(req: any, res: any) {
   try {
     const client = new Anthropic({ apiKey });
 
-    // STEP 1: Web search for fresh data
     let searchResults = {
-      sources_found: [],
-      top_products: [],
+      sources_found: [] as any[],
+      top_products: [] as string[],
       consensus: "",
       latest_data: "",
     };
@@ -153,7 +152,7 @@ export default async function handler(req: any, res: any) {
       const searchResponse = await client.messages.create({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1500,
-        tools: [{ type: "web_search_20250305" as const, name: "web_search" }],
+        tools: [{ type: "web_search_20250305" as const, name: "web_search" as const }],
         system: `You are a research assistant. Search for the latest independent test results (2024-2026) for the given query.
 
 Use these trusted sources:
@@ -202,7 +201,6 @@ Return ONLY valid JSON:
       console.error("Web search failed, continuing with knowledge base:", searchError);
     }
 
-    // STEP 2: Generate recommendation
     const recommendation = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
@@ -217,7 +215,7 @@ ${JSON.stringify(searchResults, null, 2)}
 
 Instructions:
 - Use fresh search data as primary source when available
-- Combine with built-in knowledge for this category  
+- Combine with built-in knowledge for this category
 - Prioritize 2025-2026 data
 - Give ONE clear recommendation in exact JSON format
 - Be specific about which customer segment this suits
