@@ -30,16 +30,9 @@ function recordFreeSearch() {
 function saveFeedback(query: string, rating: "up" | "down", comment: string) {
   try {
     const existing = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]") as object[];
-    existing.push({
-      query,
-      rating,
-      comment,
-      date: new Date().toISOString(),
-    });
+    existing.push({ query, rating, comment, date: new Date().toISOString() });
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(existing));
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 async function sendFeedbackEmail(query: string, rating: "up" | "down", comment: string, result: RankFinalResult) {
@@ -57,12 +50,8 @@ async function sendFeedbackEmail(query: string, rating: "up" | "down", comment: 
         date: new Date().toISOString(),
       }),
     });
-  } catch {
-    // ignore – feedback saved locally anyway
-  }
+  } catch {}
 }
-
-// ─── Upgrade Banner ───────────────────────────────────────────────────────────
 
 function UpgradeBanner() {
   return (
@@ -77,8 +66,6 @@ function UpgradeBanner() {
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function getCountryFlag(country: string) {
   const code = country.trim().slice(0, 2).toUpperCase();
   const flags: Record<string, string> = {
@@ -87,8 +74,6 @@ function getCountryFlag(country: string) {
   };
   return flags[code] ?? "🌐";
 }
-
-// ─── Share Buttons ────────────────────────────────────────────────────────────
 
 function ShareButtons({ result }: { result: RankFinalResult }) {
   const [copied, setCopied] = useState(false);
@@ -145,7 +130,7 @@ function ShareButtons({ result }: { result: RankFinalResult }) {
         <Share2 className="size-4" /> Share:
       </span>
       {shareLinks.map((link) => (
-        
+        <a
           key={link.name}
           href={link.href}
           target="_blank"
@@ -169,8 +154,6 @@ function ShareButtons({ result }: { result: RankFinalResult }) {
   );
 }
 
-// ─── Feedback Widget ──────────────────────────────────────────────────────────
-
 function FeedbackWidget({ result }: { result: RankFinalResult }) {
   const [rating, setRating] = useState<"up" | "down" | null>(null);
   const [comment, setComment] = useState("");
@@ -191,9 +174,7 @@ function FeedbackWidget({ result }: { result: RankFinalResult }) {
       <Card className="border-success/30 bg-success/5">
         <CardContent className="flex items-center gap-3 py-4">
           <Check className="size-5 text-success" />
-          <p className="font-bold text-text-primary">
-            Thank you for your feedback! It helps us improve RankFinal.
-          </p>
+          <p className="font-bold text-text-primary">Thank you for your feedback! It helps us improve RankFinal.</p>
         </CardContent>
       </Card>
     );
@@ -241,12 +222,7 @@ function FeedbackWidget({ result }: { result: RankFinalResult }) {
               rows={3}
               className="w-full rounded-input border border-border bg-background px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary focus:border-accent-amber focus:outline-none resize-none"
             />
-            <Button
-              variant="amber"
-              onClick={handleSubmit}
-              disabled={sending}
-              className="w-full sm:w-auto"
-            >
+            <Button variant="amber" onClick={handleSubmit} disabled={sending} className="w-full sm:w-auto">
               {sending ? "Sending..." : "Send feedback →"}
             </Button>
           </div>
@@ -255,8 +231,6 @@ function FeedbackWidget({ result }: { result: RankFinalResult }) {
     </Card>
   );
 }
-
-// ─── Loading / Empty / Error states ──────────────────────────────────────────
 
 function LoadingResults({ step }: { step: 1 | 2 }) {
   const message =
@@ -311,14 +285,10 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-// ─── Score Breakdown ──────────────────────────────────────────────────────────
-
 function ScoreBreakdown({ result }: { result: RankFinalResult }) {
   return (
     <Card className="print-section">
-      <CardHeader>
-        <CardTitle>Score breakdown</CardTitle>
-      </CardHeader>
+      <CardHeader><CardTitle>Score breakdown</CardTitle></CardHeader>
       <CardContent className="overflow-x-auto">
         <table className="w-full min-w-[620px] text-left text-sm">
           <thead className="text-text-secondary">
@@ -335,18 +305,13 @@ function ScoreBreakdown({ result }: { result: RankFinalResult }) {
                 <td className="py-4 font-bold text-text-primary">{row.criteria}</td>
                 <td className="font-bold text-text-primary">{row.score.toFixed(1)}/10</td>
                 <td className="text-text-secondary">{row.weight}%</td>
-                <td className="w-56">
-                  <ScoreBar score={row.score} label="" />
-                </td>
+                <td className="w-56"><ScoreBar score={row.score} label="" /></td>
               </tr>
             ))}
             <tr>
               <td className="py-4 text-lg font-extrabold text-accent-amber">FINAL SCORE</td>
-              <td className="text-lg font-extrabold text-accent-amber">
-                {result.best.score.toFixed(1)}/10
-              </td>
-              <td />
-              <td />
+              <td className="text-lg font-extrabold text-accent-amber">{result.best.score.toFixed(1)}/10</td>
+              <td /><td />
             </tr>
           </tbody>
         </table>
@@ -355,23 +320,16 @@ function ScoreBreakdown({ result }: { result: RankFinalResult }) {
   );
 }
 
-// ─── Sources ──────────────────────────────────────────────────────────────────
-
 function Sources({ result }: { result: RankFinalResult }) {
   return (
     <Card className="print-section sources-section">
       <CardHeader>
         <CardTitle>Verified Sources</CardTitle>
-        <CardDescription>
-          All sources are independent. RankFinal receives no payment from any reviewed brand.
-        </CardDescription>
+        <CardDescription>All sources are independent. RankFinal receives no payment from any reviewed brand.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
         {result.sources.map((source) => (
-          <article
-            key={`${source.name}-${source.url}`}
-            className="rounded-card border border-border bg-background p-4"
-          >
+          <article key={`${source.name}-${source.url}`} className="rounded-card border border-border bg-background p-4">
             <div className="flex items-start justify-between gap-3">
               <h3 className="font-extrabold text-text-primary">{source.name}</h3>
               <span className="shrink-0 text-sm text-text-secondary">
@@ -382,7 +340,7 @@ function Sources({ result }: { result: RankFinalResult }) {
               {source.date} · {"★".repeat(Math.max(1, Math.min(5, Math.round(source.credibility))))}
             </p>
             <p className="mt-3 text-sm leading-6 text-text-secondary">{source.description}</p>
-            
+            <a
               href={source.url}
               target="_blank"
               rel="noreferrer"
@@ -397,13 +355,9 @@ function Sources({ result }: { result: RankFinalResult }) {
   );
 }
 
-// ─── Main Results ─────────────────────────────────────────────────────────────
-
 function Results({ result }: { result: RankFinalResult }) {
   return (
     <PageWrapper className="space-y-6 py-8 print:max-w-none print:p-0">
-
-      {/* Top bar */}
       <section className="filters rounded-card border border-border bg-surface p-4 shadow-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -422,16 +376,12 @@ function Results({ result }: { result: RankFinalResult }) {
         </div>
       </section>
 
-      {/* Share buttons */}
       <section className="print:hidden">
         <ShareButtons result={result} />
       </section>
 
-      {/* Recommendations */}
       <section className="space-y-6 animate-fade-in">
         <div className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
-
-          {/* Best choice */}
           <Card className="print-section border-l-4 border-l-accent-amber shadow-amber">
             <CardHeader>
               <Badge variant="amber">🥇 Best choice</Badge>
@@ -474,23 +424,18 @@ function Results({ result }: { result: RankFinalResult }) {
             </CardContent>
           </Card>
 
-          {/* Alternative + Avoid */}
           <div className="space-y-6">
             <Card className="border-l-4 border-l-accent-purple">
               <CardHeader>
                 <Badge variant="purple">🥈 Alternative</Badge>
-                <CardTitle>
-                  {result.alternative.name} · {result.alternative.score.toFixed(1)}/10
-                </CardTitle>
+                <CardTitle>{result.alternative.name} · {result.alternative.score.toFixed(1)}/10</CardTitle>
                 <CardDescription>{result.alternative.reason}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="rounded-input bg-background p-3 text-sm font-semibold italic text-text-primary">
                   Choose this if: {result.alternative.good_if}
                 </p>
-                <span className="font-extrabold text-text-primary">
-                  {result.alternative.price_range}
-                </span>
+                <span className="font-extrabold text-text-primary">{result.alternative.price_range}</span>
               </CardContent>
             </Card>
 
@@ -507,32 +452,25 @@ function Results({ result }: { result: RankFinalResult }) {
         <ScoreBreakdown result={result} />
         <Sources result={result} />
 
-        {/* Feedback */}
         <section className="print:hidden">
           <FeedbackWidget result={result} />
         </section>
 
-        {/* Bottom share */}
         <section className="print:hidden rounded-card border border-border bg-surface p-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-bold text-text-primary">Found this useful?</p>
-              <p className="text-sm text-text-secondary">
-                Share this recommendation with someone who needs it.
-              </p>
+              <p className="text-sm text-text-secondary">Share this recommendation with someone who needs it.</p>
             </div>
             <ShareButtons result={result} />
           </div>
         </section>
-
       </section>
     </PageWrapper>
   );
 }
 
-// ─── Error Boundary ───────────────────────────────────────────────────────────
-
-class SearchErrorBoundary extends Component
+class SearchErrorBoundary extends Component<
   { children: ReactNode },
   { hasError: boolean }
 > {
@@ -553,8 +491,6 @@ class SearchErrorBoundary extends Component
     return this.props.children;
   }
 }
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 function SearchPageContent() {
   const [params] = useSearchParams();
@@ -586,9 +522,7 @@ function SearchPageContent() {
     }
   }, [country, query]);
 
-  useEffect(() => {
-    void loadRecommendation();
-  }, [loadRecommendation]);
+  useEffect(() => { void loadRecommendation(); }, [loadRecommendation]);
 
   useEffect(() => {
     if (!loading) return;
@@ -598,12 +532,8 @@ function SearchPageContent() {
 
   useEffect(() => {
     if (!query) return;
-    const titleQuery = query
-      .trim()
-      .split(" ")
-      .filter(Boolean)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+    const titleQuery = query.trim().split(" ").filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
     document.title = `${titleQuery} 2026 – RankFinal Analysis`;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!meta) {
@@ -615,25 +545,14 @@ function SearchPageContent() {
   }, [country, query]);
 
   if (!query) return <EmptySearch />;
-  if (loading)
-    return (
-      <>
-        {showUpgradeBanner && <UpgradeBanner />}
-        <LoadingResults step={loadingStep} />
-      </>
-    );
-  if (error || !result)
-    return (
-      <>
-        {showUpgradeBanner && <UpgradeBanner />}
-        <ErrorState onRetry={loadRecommendation} />
-      </>
-    );
+  if (loading) return (
+    <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults step={loadingStep} /></>
+  );
+  if (error || !result) return (
+    <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>
+  );
   return (
-    <>
-      {showUpgradeBanner && <UpgradeBanner />}
-      <Results result={result} />
-    </>
+    <>{showUpgradeBanner && <UpgradeBanner />}<Results result={result} /></>
   );
 }
 
