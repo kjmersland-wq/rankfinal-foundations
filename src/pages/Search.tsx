@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Component, type ReactNode, useCallback, useEffect, useState } from "react";
 import { Check, ExternalLink, Printer, RotateCcw, X, Zap } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -215,7 +215,27 @@ function Results({ result }: { result: RankFinalResult }) {
   );
 }
 
-export default function SearchPage() {
+class SearchErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("Search page render failed", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorState onRetry={() => window.location.reload()} />;
+    }
+
+    return this.props.children;
+  }
+}
+
+function SearchPageContent() {
   const [params] = useSearchParams();
   const query = params.get("q") ?? "";
   const country = params.get("country") ?? "Global";
@@ -248,4 +268,12 @@ export default function SearchPage() {
   if (loading) return <LoadingResults />;
   if (error || !result) return <ErrorState onRetry={loadRecommendation} />;
   return <Results result={result} />;
+}
+
+export default function SearchPage() {
+  return (
+    <SearchErrorBoundary>
+      <SearchPageContent />
+    </SearchErrorBoundary>
+  );
 }
