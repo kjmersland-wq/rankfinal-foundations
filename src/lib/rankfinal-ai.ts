@@ -36,30 +36,25 @@ export interface RankFinalResult {
   updated_at: string;
 }
 
-const client = new Anthropic({
-  apiKey: import.meta.env.ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
 export async function getRankFinalRecommendation(
   query: string,
   country: string = "Global"
 ): Promise<RankFinalResult> {
-  const response = await fetch(
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/rankfinal-ai`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ query, country }),
-    }
-  );
+  const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/rankfinal-ai`;
+  const response = await fetch(functionUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query, country }),
+  });
 
   if (!response.ok) {
-    throw new Error("API call failed");
+    const errorText = await response.text();
+    console.error("Edge function error:", errorText);
+    throw new Error("API call failed: " + errorText);
   }
 
-  return response.json() as Promise<RankFinalResult>;
+  const data = await response.json();
+  return data as RankFinalResult;
 }

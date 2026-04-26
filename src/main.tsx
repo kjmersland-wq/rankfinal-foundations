@@ -1,9 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import { validateConfig } from "./lib/config";
 import "./index.css";
-
-validateConfig();
 
 const isInIframe = (() => {
   try {
