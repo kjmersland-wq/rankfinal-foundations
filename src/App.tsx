@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/rankfinal/ScrollToTop";
 import { AddToHomePrompt } from "@/components/rankfinal/AddToHomePrompt";
 import { RouteShell } from "@/components/rankfinal/RouteShell";
 import { LoadingSkeleton } from "@/components/rankfinal/ui";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Browse = lazy(() => import("./pages/Browse.tsx"));
@@ -22,7 +23,8 @@ const Contact = lazy(() => import("./pages/Contact.tsx"));
 const Success = lazy(() => import("./pages/Success.tsx"));
 const Cancel = lazy(() => import("./pages/Cancel.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
-const LegalPage = lazy(() => import("./pages/LegalPage.tsx").then((module) => ({ default: module.LegalPage })));
+const SignIn = lazy(() => import("./pages/SignIn.tsx"));
+const LegalPage = lazy(() => import("./pages/LegalPage.tsx").then((m) => ({ default: m.LegalPage })));
 
 const queryClient = new QueryClient();
 
@@ -39,35 +41,38 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen bg-background text-foreground">
-          <Nav />
-          <RouteShell>
-            <Suspense fallback={routeFallback}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/browse" element={<Browse />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/help/:slug" element={<HelpArticle />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/success" element={<Success />} />
-                <Route path="/cancel" element={<Cancel />} />
-                <Route path="/privacy" element={<LegalPage kind="privacy" />} />
-                <Route path="/terms" element={<LegalPage kind="terms" />} />
-                <Route path="/cookies" element={<LegalPage kind="cookies" />} />
-                <Route path="/disclaimer" element={<LegalPage kind="disclaimer" />} />
-                <Route path="/404" element={<NotFound />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </RouteShell>
-          <Footer />
-          <ScrollToTop />
-          <CookieConsent />
-          <AddToHomePrompt />
-        </div>
+        <AuthProvider>
+          <div className="min-h-screen bg-background text-foreground">
+            <Nav />
+            <RouteShell>
+              <Suspense fallback={routeFallback}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/browse" element={<Browse />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/help/:slug" element={<HelpArticle />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/success" element={<Success />} />
+                  <Route path="/cancel" element={<Cancel />} />
+                  <Route path="/privacy" element={<LegalPage kind="privacy" />} />
+                  <Route path="/terms" element={<LegalPage kind="terms" />} />
+                  <Route path="/cookies" element={<LegalPage kind="cookies" />} />
+                  <Route path="/disclaimer" element={<LegalPage kind="disclaimer" />} />
+                  <Route path="/404" element={<NotFound />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </RouteShell>
+            <Footer />
+            <ScrollToTop />
+            <CookieConsent />
+            <AddToHomePrompt />
+          </div>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
