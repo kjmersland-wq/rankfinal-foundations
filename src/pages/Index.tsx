@@ -58,34 +58,16 @@ const updates = [
 
 function useTypewriter(words: string[]) {
   const [wordIndex, setWordIndex] = useState(0);
-  const [visibleLength, setVisibleLength] = useState(0);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const currentWord = words[wordIndex];
-    const complete = visibleLength === currentWord.length;
-    const empty = visibleLength === 0;
-    const delay = complete && !deleting ? 1500 : deleting ? 34 : 58;
+    const interval = window.setInterval(() => {
+      setWordIndex((index) => (index + 1) % words.length);
+    }, 1800);
 
-    const timeout = window.setTimeout(() => {
-      if (!deleting && complete) {
-        setDeleting(true);
-        return;
-      }
+    return () => window.clearInterval(interval);
+  }, [words.length]);
 
-      if (deleting && empty) {
-        setDeleting(false);
-        setWordIndex((index) => (index + 1) % words.length);
-        return;
-      }
-
-      setVisibleLength((length) => length + (deleting ? -1 : 1));
-    }, delay);
-
-    return () => window.clearTimeout(timeout);
-  }, [deleting, visibleLength, wordIndex, words]);
-
-  return words[wordIndex].slice(0, visibleLength);
+  return words[wordIndex];
 }
 
 function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
