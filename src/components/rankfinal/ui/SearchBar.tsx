@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Clock, Search, TrendingUp } from "lucide-react";
+import { ArrowRight, Clock, Globe2, Search, TrendingUp } from "lucide-react";
 import { categories } from "@/data/categories";
 import { suggestedQueries } from "@/data/searchResults";
 import { cn } from "@/lib/utils";
@@ -85,7 +85,9 @@ export function SearchBar({ className, containerClassName, defaultValue, placeho
           autoComplete="off"
           {...props}
         />
-        <span className="hidden rounded-pill border border-border bg-background px-2 py-1 text-[10px] font-bold text-text-secondary sm:inline-flex">{country}</span>
+        <span className="hidden items-center gap-1 rounded-pill border border-border bg-background px-2 py-1 text-[10px] font-bold text-text-secondary sm:inline-flex" aria-label={`Country selector, currently Global. Detected locale ${country}`}>
+          <Globe2 className="size-3" aria-hidden="true" /> Global
+        </span>
       </label>
 
       {showDropdown && (
