@@ -4,12 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer, Nav } from "@/components/rankfinal/layout";
+import { CookieConsent } from "@/components/rankfinal/CookieConsent";
 import Index from "./pages/Index.tsx";
 import Browse from "./pages/Browse.tsx";
 import SearchPage from "./pages/Search.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Help from "./pages/Help.tsx";
 import HelpArticle from "./pages/HelpArticle.tsx";
+import About from "./pages/About.tsx";
+import { LegalPage } from "./pages/LegalPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 
@@ -30,12 +33,15 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/help" element={<Help />} />
             <Route path="/help/:slug" element={<HelpArticle />} />
-            <Route path="/about" element={<PlaceholderPage title="About" />} />
-            <Route path="/privacy" element={<PlaceholderPage title="Privacy" />} />
-            <Route path="/terms" element={<PlaceholderPage title="Terms" />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<LegalPage kind="privacy" />} />
+            <Route path="/terms" element={<LegalPage kind="terms" />} />
+            <Route path="/cookies" element={<LegalPage kind="cookies" />} />
+            <Route path="/disclaimer" element={<LegalPage kind="disclaimer" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
+          <CookieConsent />
         </div>
       </BrowserRouter>
     </TooltipProvider>
