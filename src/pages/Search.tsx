@@ -110,31 +110,38 @@ function Sources({ result }: { result: SearchResultSet }) {
 function Results({ result, query }: { result: SearchResultSet; query: string }) {
   const [sort, setSort] = useState(sortOptions[0]);
   const today = new Date().toLocaleDateString();
+  const orderedResults = useMemo(
+    () => [result, ...mockSearchResults.filter((item) => item.query !== result.query)],
+    [result],
+  );
   return (
     <PageWrapper className="space-y-6 py-8 print:max-w-none print:p-0">
       <div className="print-header hidden"><strong>RankFinal.com</strong> · {today} · Query: {query}</div>
       <section className="filters rounded-card border border-border bg-surface p-4 shadow-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div><p className="text-sm font-bold text-text-secondary">Search results for</p><h1 className="text-2xl font-extrabold text-text-primary sm:text-3xl">{query}</h1></div>
+          <div><p className="text-sm font-bold text-text-secondary">5 verified analyses for</p><h1 className="text-2xl font-extrabold text-text-primary sm:text-3xl">{query}</h1></div>
           <div className="flex flex-wrap items-center gap-2"><Badge variant="gray">Country: {result.country}</Badge><Badge variant="gray">Budget: Mid-range</Badge><Badge variant="purple">{result.category}</Badge><Badge variant="amber">Year: {result.year}</Badge><UpdateBadge hours={2} /></div>
           <label className="flex items-center gap-2 rounded-input border border-border bg-background px-3 py-2 text-sm font-bold text-text-primary">Sort <select value={sort} onChange={(event) => setSort(event.target.value)} className="bg-transparent outline-none"><option>{sortOptions[0]}</option><option>{sortOptions[1]}</option><option>{sortOptions[2]}</option></select><ChevronDown className="size-4" /></label>
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
-        <Card className="print-section border-l-4 border-l-accent-amber shadow-amber animate-fade-in" style={{ animationDelay: "0ms" }}>
-          <CardHeader><Badge variant="amber">🥇 Best choice</Badge><CardTitle className="text-3xl">{result.bestChoice.name}</CardTitle></CardHeader>
-          <CardContent className="space-y-6"><ScoreBar score={result.bestChoice.score} /><p className="text-base leading-8 text-text-primary">{result.bestChoice.recommendation}</p><div className="grid gap-4 md:grid-cols-2"><div className="space-y-2"><h3 className="font-bold text-text-primary">Strengths</h3>{result.bestChoice.strengths.map((item) => <p key={item} className="flex gap-2 text-sm text-text-secondary"><Check className="mt-0.5 size-4 shrink-0 text-success" />{item}</p>)}</div><div className="space-y-2"><h3 className="font-bold text-text-primary">Weaknesses</h3>{result.bestChoice.weaknesses.map((item) => <p key={item} className="flex gap-2 text-sm text-text-secondary"><X className="mt-0.5 size-4 shrink-0 text-destructive" />{item}</p>)}</div></div><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><span className="text-xl font-extrabold text-text-primary">{result.bestChoice.price}</span><Button variant="amber">Check current price <ExternalLink className="size-4" /></Button></div><ResultActions /></CardContent>
-        </Card>
-
-        <div className="space-y-6">
-          <Card className="border-l-4 border-l-accent-purple animate-fade-in" style={{ animationDelay: "50ms" }}><CardHeader><Badge variant="purple">🥈 Best alternative</Badge><CardTitle>{result.alternative.name} · {result.alternative.score.toFixed(1)}/10</CardTitle><CardDescription>{result.alternative.reason}</CardDescription></CardHeader><CardContent className="space-y-4"><p className="rounded-input bg-background p-3 text-sm font-semibold text-text-primary">Choose this if: {result.alternative.scenario}</p><div className="flex items-center justify-between gap-3"><span className="font-extrabold text-text-primary">{result.alternative.price}</span><Button variant="secondary" size="sm">View offer</Button></div></CardContent></Card>
-          <Card className="border-l-4 border-l-destructive animate-fade-in" style={{ animationDelay: "100ms" }}><CardHeader><Badge variant="red">❌ What to avoid</Badge><CardTitle>{result.avoid.name}</CardTitle><CardDescription>{result.avoid.reason}</CardDescription></CardHeader></Card>
-        </div>
-      </div>
-
-      <ScoringTable result={result} />
-      <Sources result={result} />
+      {orderedResults.map((item, resultIndex) => (
+        <section key={item.query} className="space-y-6 animate-fade-in" style={{ animationDelay: `${resultIndex * 50}ms` }}>
+          <div className="flex flex-wrap items-end justify-between gap-3"><div><Badge variant="gray">{item.category}</Badge><h2 className="mt-3 text-2xl font-extrabold text-text-primary">{item.query}</h2></div><Badge variant="amber">{item.sourceCount} verified sources</Badge></div>
+          <div className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
+            <Card className="print-section border-l-4 border-l-accent-amber shadow-amber">
+              <CardHeader><Badge variant="amber">🥇 Best choice</Badge><CardTitle className="text-3xl">{item.bestChoice.name}</CardTitle></CardHeader>
+              <CardContent className="space-y-6"><ScoreBar score={item.bestChoice.score} /><p className="text-base leading-8 text-text-primary">{item.bestChoice.recommendation}</p><div className="grid gap-4 md:grid-cols-2"><div className="space-y-2"><h3 className="font-bold text-text-primary">Strengths</h3>{item.bestChoice.strengths.map((strength) => <p key={strength} className="flex gap-2 text-sm text-text-secondary"><Check className="mt-0.5 size-4 shrink-0 text-success" />{strength}</p>)}</div><div className="space-y-2"><h3 className="font-bold text-text-primary">Weaknesses</h3>{item.bestChoice.weaknesses.map((weakness) => <p key={weakness} className="flex gap-2 text-sm text-text-secondary"><X className="mt-0.5 size-4 shrink-0 text-destructive" />{weakness}</p>)}</div></div><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><span className="text-xl font-extrabold text-text-primary">{item.bestChoice.price}</span><Button variant="amber">Check current price <ExternalLink className="size-4" /></Button></div><ResultActions /></CardContent>
+            </Card>
+            <div className="space-y-6">
+              <Card className="border-l-4 border-l-accent-purple"><CardHeader><Badge variant="purple">🥈 Best alternative</Badge><CardTitle>{item.alternative.name} · {item.alternative.score.toFixed(1)}/10</CardTitle><CardDescription>{item.alternative.reason}</CardDescription></CardHeader><CardContent className="space-y-4"><p className="rounded-input bg-background p-3 text-sm font-semibold text-text-primary">Choose this if: {item.alternative.scenario}</p><div className="flex items-center justify-between gap-3"><span className="font-extrabold text-text-primary">{item.alternative.price}</span><Button variant="secondary" size="sm">View offer</Button></div></CardContent></Card>
+              <Card className="border-l-4 border-l-destructive"><CardHeader><Badge variant="red">❌ What to avoid</Badge><CardTitle>{item.avoid.name}</CardTitle><CardDescription>{item.avoid.reason}</CardDescription></CardHeader></Card>
+            </div>
+          </div>
+          <ScoringTable result={item} />
+          <Sources result={item} />
+        </section>
+      ))}
     </PageWrapper>
   );
 }

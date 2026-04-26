@@ -8,11 +8,11 @@ import { categories } from "@/data/categories";
 import { cn } from "@/lib/utils";
 
 const typewriterPhrases = [
-  "Best smartphone for you.",
-  "Best car insurance for you.",
-  "Best electricity provider for you.",
-  "Best electric car for you.",
-  "Best bank for you.",
+  "smartphone",
+  "car insurance",
+  "electricity provider",
+  "electric car",
+  "bank",
 ];
 
 const trendingTags = [
@@ -58,34 +58,16 @@ const updates = [
 
 function useTypewriter(words: string[]) {
   const [wordIndex, setWordIndex] = useState(0);
-  const [visibleLength, setVisibleLength] = useState(0);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const currentWord = words[wordIndex];
-    const complete = visibleLength === currentWord.length;
-    const empty = visibleLength === 0;
-    const delay = complete && !deleting ? 1500 : deleting ? 34 : 58;
+    const interval = window.setInterval(() => {
+      setWordIndex((index) => (index + 1) % words.length);
+    }, 1800);
 
-    const timeout = window.setTimeout(() => {
-      if (!deleting && complete) {
-        setDeleting(true);
-        return;
-      }
+    return () => window.clearInterval(interval);
+  }, [words.length]);
 
-      if (deleting && empty) {
-        setDeleting(false);
-        setWordIndex((index) => (index + 1) % words.length);
-        return;
-      }
-
-      setVisibleLength((length) => length + (deleting ? -1 : 1));
-    }, delay);
-
-    return () => window.clearTimeout(timeout);
-  }, [deleting, visibleLength, wordIndex, words]);
-
-  return words[wordIndex].slice(0, visibleLength);
+  return words[wordIndex];
 }
 
 function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
@@ -149,14 +131,14 @@ const Index = () => {
   const tickerItems = useMemo(() => [...updates, ...updates], []);
 
   return (
-    <PageWrapper className="space-y-16 py-8 sm:py-12 lg:py-16">
-      <section className="mx-auto flex min-h-[calc(100vh-12rem)] max-w-5xl flex-col items-center justify-center gap-8 text-center">
-        <Reveal className="space-y-7">
+    <PageWrapper className="space-y-8 py-5 sm:py-6 lg:py-8">
+      <section className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-5 pt-3 text-center sm:pt-6 lg:min-h-[360px]">
+        <Reveal className="space-y-5">
           <Badge variant="amber">RankFinal.com</Badge>
-          <div className="space-y-5">
-            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-text-primary sm:text-6xl lg:text-7xl">
-              Find the <span className="text-accent-amber">{typedText}</span>
-              <span className="ml-1 inline-block h-10 w-1 translate-y-1 bg-accent-amber animate-caret sm:h-14 lg:h-16" aria-hidden="true" />
+          <div className="space-y-3">
+            <h1 className="mx-auto max-w-5xl text-4xl font-extrabold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+              Find the best <span className="text-accent-amber">{typedText}</span>
+              <span className="ml-1 inline-block h-9 w-1 translate-y-1 bg-accent-amber animate-caret sm:h-12 lg:h-14" aria-hidden="true" /> for you.
             </h1>
             <p className="text-lg font-medium text-text-secondary sm:text-xl">One answer. Verified sources. No noise.</p>
           </div>
