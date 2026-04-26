@@ -300,7 +300,7 @@ function SearchPageContent() {
   }, [loadRecommendation]);
 
   if (!query) return <EmptySearch />;
-  if (loading) return <><UpgradeBanner />{showUpgradeBanner && null}<LoadingResults /></>;
+  if (loading) return <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults /></>;
   if (error || !result) return <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>;
   return <>{showUpgradeBanner && <UpgradeBanner />}<Results result={result} /></>;
 }
