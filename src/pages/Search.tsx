@@ -299,6 +299,30 @@ function SearchPageContent() {
     void loadRecommendation();
   }, [loadRecommendation]);
 
+  useEffect(() => {
+    if (!query) return;
+
+    const normalizedQuery = query.trim();
+    const normalizedCountry = country.trim() || "Global";
+    const titleQuery = normalizedQuery
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    const title = `${titleQuery} 2026 – RankFinal Analysis`;
+    const description = `Independent AI analysis of ${normalizedQuery} in ${normalizedCountry}. Verified sources, honest strengths and weaknesses. Updated 2026.`;
+
+    document.title = title;
+
+    let metaDescription = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement("meta");
+      metaDescription.name = "description";
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.content = description;
+  }, [country, query]);
+
   if (!query) return <EmptySearch />;
   if (loading) return <>{showUpgradeBanner && <UpgradeBanner />}<LoadingResults /></>;
   if (error || !result) return <>{showUpgradeBanner && <UpgradeBanner />}<ErrorState onRetry={loadRecommendation} /></>;
