@@ -1,244 +1,218 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Award, BadgeCheck, CalendarCheck, Earth, ShieldOff } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge, SearchBar } from "@/components/rankfinal/ui";
-import { PageWrapper } from "@/components/rankfinal/layout";
-import { CategoryCard } from "@/components/rankfinal/CategoryCard";
-import { categories } from "@/data/categories";
-import { cn } from "@/lib/utils";
-
-const typewriterPhrases = [
-  "smartphone",
-  "car insurance",
-  "electricity provider",
-  "electric car",
-  "bank",
-];
-
-const trendingTags = [
-  "Best EV 2026",
-  "Cheapest electricity UK",
-  "Top smartphone",
-  "Best travel insurance",
-  "Home loan Norway",
-];
-
-const trustStats = [
-  { icon: Earth, value: 50, suffix: "+", text: "countries" },
-  { icon: Award, value: 10000, suffix: "+", text: "verified tests" },
-  { icon: ShieldOff, label: "No sponsored content" },
-  { icon: CalendarCheck, label: "Updated daily" },
-  { icon: BadgeCheck, value: 100, suffix: "%", text: "independent" },
-];
-
-const steps = [
-  {
-    icon: "🔍",
-    title: "Ask",
-    description: "Type what you need in plain language",
-  },
-  {
-    icon: "🧠",
-    title: "Analyze",
-    description: "AI scans verified tests from 50+ countries, removes bias and sponsored content",
-  },
-  {
-    icon: "✅",
-    title: "Decide",
-    description: "One clear recommendation, full source transparency",
-  },
-];
-
-const updates = [
-  "🔄 Updated 2h ago: Best EV insurance Norway",
-  "🔄 Updated 4h ago: Best home insurance UK",
-  "🔄 Updated 1h ago: Best smartphone under €800",
-  "🔄 Updated 6h ago: Best electricity provider Germany",
-];
-
-function useTypewriter(words: string[]) {
-  const [wordIndex, setWordIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setWordIndex((index) => (index + 1) % words.length);
-    }, 1800);
-
-    return () => window.clearInterval(interval);
-  }, [words.length]);
-
-  return words[wordIndex];
-}
-
-function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
-  const [display, setDisplay] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      let frame = 0;
-      const total = 50;
-      const tick = () => {
-        frame += 1;
-        const progress = 1 - Math.pow(1 - frame / total, 3);
-        setDisplay(Math.round(value * Math.min(progress, 1)));
-        if (frame < total) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      observer.unobserve(entry.target);
-    }, { threshold: 0.6 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return <span ref={ref}>{display.toLocaleString()}{suffix}</span>;
-}
-
-function Reveal({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(entry.target);
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary SEO -->
+    <title>RankFinal – AI-Powered Purchase Decisions | Get the Right Product in 30 Seconds</title>
+    <meta name="description" content="RankFinal gives you one clear, AI-powered recommendation based on verified global tests. Best bank, insurance, EV, smartphone, and 90+ categories. No ads. No bias. Just the right choice.">
+    <meta name="keywords" content="best product recommendations, AI buying guide, independent product reviews, best bank Norway, best EV insurance Norway, best smartphone 2026, beste bank Norge, beste strømleverandør, beste bilforsikring, best travel insurance, best laptop 2026, AI purchase decision, unbiased product reviews">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="author" content="KM TECH LABS, Kristiansand, Norway" />
+    <meta name="theme-color" content="#0A0A0F" />
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="1 days">
+    <meta name="rating" content="general">
+    <meta name="category" content="Shopping, Finance, Technology, Consumer Guide">
+    
+    <!-- Google Site Verification - replace with real code -->
+    <meta name="google-site-verification" content="REPLACE_WITH_GOOGLE_VERIFICATION_CODE">
+    
+    <!-- Bing Verification - get from Bing Webmaster Tools -->
+    <meta name="msvalidate.01" content="REPLACE_WITH_BING_VERIFICATION_CODE">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://www.rankfinal.com/" />
+    
+    <!-- Icons & Manifest -->
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="RankFinal – Get the Right Product in 30 Seconds">
+    <meta property="og:description" content="One answer. Verified sources. No noise. AI-powered recommendations across 90+ categories including banking, insurance, electronics, EVs and more.">
+    <meta property="og:image" content="https://www.rankfinal.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="RankFinal - Get the right product in 30 seconds">
+    <meta property="og:url" content="https://www.rankfinal.com">
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RankFinal">
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@rankfinal">
+    <meta name="twitter:creator" content="@rankfinal">
+    <meta name="twitter:title" content="RankFinal – Get the Right Product in 30 Seconds">
+    <meta name="twitter:description" content="One answer. Verified sources. No noise. AI-powered purchase decisions across 90+ categories.">
+    <meta name="twitter:image" content="https://www.rankfinal.com/og-image.png">
+    <meta name="twitter:image:alt" content="RankFinal - AI purchase decision engine">
+    
+    <!-- Schema.org: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "RankFinal",
+      "alternateName": "RankFinal.com",
+      "url": "https://www.rankfinal.com",
+      "logo": "https://www.rankfinal.com/favicon.png",
+      "image": "https://www.rankfinal.com/og-image.png",
+      "description": "AI-powered purchase decision engine providing one clear, independent recommendation based on verified global test data across 90+ product and service categories.",
+      "applicationCategory": "UtilityApplication",
+      "applicationSubCategory": "Shopping, Finance, Consumer Guide",
+      "operatingSystem": "Web, iOS, Android",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Plan",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "description": "5 searches per day, global sources, top recommendation"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Plan",
+          "price": "9",
+          "priceCurrency": "EUR",
+          "billingIncrement": "P1M",
+          "description": "Unlimited searches, all countries, full recommendations, PDF export"
+        },
+        {
+          "@type": "Offer",
+          "name": "Business Plan",
+          "price": "49",
+          "priceCurrency": "EUR",
+          "billingIncrement": "P1M",
+          "description": "Everything in Pro plus API access, B2B reports, white-label embedding"
+        }
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "KM TECH LABS",
+        "url": "https://www.rankfinal.com/about",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kristiansand",
+          "addressRegion": "Vest-Agder",
+          "addressCountry": "NO"
         }
       },
-      { threshold: 0.18 },
-    );
+      "publisher": {
+        "@type": "Organization",
+        "name": "KM TECH LABS",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.rankfinal.com/favicon.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.rankfinal.com/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
+    <!-- Schema.org: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "KM TECH LABS",
+      "url": "https://www.rankfinal.com",
+      "logo": "https://www.rankfinal.com/favicon.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://www.rankfinal.com/contact",
+        "availableLanguage": ["English", "Norwegian"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Kristiansand",
+        "addressCountry": "NO"
+      },
+      "sameAs": [
+        "https://www.rankfinal.com"
+      ]
+    }
+    </script>
 
-  return (
-    <div ref={ref} className={cn(visible ? "animate-fade-in opacity-100" : "opacity-0", className)}>
-      {children}
-    </div>
-  );
-}
+    <!-- Schema.org: FAQ (top questions people ask) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is RankFinal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "RankFinal is an AI-powered purchase decision engine that gives you one clear recommendation based on verified global test data. No sponsored content, no bias, just the right choice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does RankFinal work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You type what you are looking for in plain language. RankFinal's AI searches verified independent sources from 50+ countries, removes bias and sponsored content, and returns one clear recommendation with a score breakdown and source list."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is RankFinal free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, RankFinal has a free plan with 5 searches per day. Pro plan at €9/month gives unlimited searches and full recommendations. Business plan at €49/month adds API access and B2B reports."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What categories does RankFinal cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "RankFinal covers 90+ categories including smartphones, laptops, TVs, electric cars, car insurance, home insurance, travel insurance, banks, electricity providers, home appliances, sports equipment, baby products, and more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which is the best bank in Norway?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "According to EPSI Norway 2025, Bulder Bank is rated #1 for customer satisfaction in Norway for the third year running, followed by Landkreditt Bank and BN Bank. DNB consistently scores lowest."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which is the best EV insurance in Norway?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tryg Elbil Ekstra is rated best for EV insurance in Norway thanks to its unique 10-year battery guarantee and no bonus loss on parking damage. IF Super Elbil is the best alternative with 60% start bonus."
+          }
+        }
+      ]
+    }
+    </script>
 
-const Index = () => {
-  const navigate = useNavigate();
-  const typedText = useTypewriter(typewriterPhrases);
-  const tickerItems = useMemo(() => [...updates, ...updates], []);
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  return (
-    <PageWrapper className="space-y-8 py-5 sm:py-6 lg:py-8">
-      <section className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-5 pt-3 text-center sm:pt-6 lg:min-h-[360px]">
-        <Reveal className="space-y-5">
-          <Badge variant="amber">RankFinal.com</Badge>
-          <div className="space-y-3">
-            <h1 className="mx-auto max-w-5xl text-4xl font-extrabold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-              Find the best <span className="text-accent-amber">{typedText}</span>
-              <span className="ml-1 inline-block h-9 w-1 translate-y-1 bg-accent-amber animate-caret sm:h-12 lg:h-14" aria-hidden="true" /> for you.
-            </h1>
-            <p className="text-lg font-medium text-text-secondary sm:text-xl">One answer. Verified sources. No noise.</p>
-          </div>
-          <div className="mx-auto w-full max-w-3xl">
-            <SearchBar
-              containerClassName="h-14 max-w-none px-5 focus-within:max-w-none sm:h-16"
-              className="text-base"
-              placeholder="What are you looking for? e.g. best home insurance Norway"
-            />
-          </div>
-          <div className="flex flex-wrap justify-center gap-2.5">
-            {trendingTags.map((tag) => (
-              <button
-                key={tag}
-                className="rounded-pill border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-secondary transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-amber/70 hover:text-accent-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                type="button"
-                onClick={() => navigate(`/search?q=${encodeURIComponent(tag)}`)}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
-      <Reveal>
-        <section className="grid gap-3 rounded-card border border-border bg-surface p-3 shadow-surface sm:grid-cols-2 lg:grid-cols-5" aria-label="Trust indicators">
-          {trustStats.map((stat) => {
-            const Icon = stat.icon;
-            const label = "label" in stat ? stat.label : `${stat.value}${stat.suffix} ${stat.text}`;
-            return (
-              <div key={label} className="flex items-center gap-3 rounded-input px-3 py-4 transition-colors hover:bg-secondary">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <span className="text-sm font-bold text-text-primary">
-                  {"value" in stat ? <><CountUp value={stat.value} suffix={stat.suffix} /> {stat.text}</> : stat.label}
-                </span>
-              </div>
-            );
-          })}
-        </section>
-      </Reveal>
-
-      <Reveal>
-        <section className="space-y-6" aria-labelledby="how-it-works">
-          <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="purple">How it works</Badge>
-            <h2 id="how-it-works" className="mt-4 text-3xl font-extrabold text-text-primary sm:text-4xl">From question to ranked answer</h2>
-          </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {steps.map((step, index) => (
-              <Card key={step.title} className="group overflow-hidden">
-                <CardHeader>
-                  <div className="mb-4 flex size-14 items-center justify-center rounded-card border border-border bg-secondary text-2xl transition-transform duration-300 group-hover:-translate-y-1">
-                    {step.icon}
-                  </div>
-                  <CardTitle>{index + 1}. {step.title}</CardTitle>
-                  <CardDescription>{step.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </section>
-      </Reveal>
-
-
-
-      <Reveal>
-        <section className="space-y-6" aria-labelledby="category-grid">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div className="max-w-2xl space-y-3">
-              <Badge variant="amber">Categories</Badge>
-              <h2 id="category-grid" className="text-3xl font-extrabold text-text-primary sm:text-4xl">Browse every ranked category</h2>
-              <p className="text-base leading-7 text-text-secondary">Start with a market, then drill into transparent rankings by country, budget, and update frequency.</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
-        </section>
-      </Reveal>
-
-      <Reveal>
-        <section className="overflow-hidden rounded-card border border-border bg-surface py-4 shadow-surface" aria-label="Live updates ticker">
-          <div className="flex w-max gap-3 animate-ticker hover:[animation-play-state:paused]">
-            {tickerItems.map((item, index) => (
-              <div key={`${item}-${index}`} className="mx-1 shrink-0 rounded-pill border border-border bg-background px-5 py-3 text-sm font-semibold text-text-primary">
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-      </Reveal>
-    </PageWrapper>
-  );
-};
-
-export default Index;
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
