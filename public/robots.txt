@@ -3,4 +3,42 @@ Allow: /
 Disallow: /api/
 Disallow: /success
 Disallow: /cancel
+Disallow: /admin/
+
+# Allow important pages explicitly
+Allow: /browse/
+Allow: /search
+Allow: /pricing
+Allow: /help
+Allow: /about
+Allow: /contact
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
+
+# Sitemaps
 Sitemap: https://www.rankfinal.com/sitemap.xml
+Sitemap: https://www.rankfinal.com/sitemap-categories.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /success
+Disallow: /cancel
+Crawl-delay: 0
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
