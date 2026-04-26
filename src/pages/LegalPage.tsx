@@ -9,7 +9,7 @@ const content = {
     title: "Privacy Policy",
     intro: "This privacy policy explains how RankFinal.com, operated by KM TECH LABS in Kristiansand, Norway, handles personal data under GDPR.",
     sections: [
-      ["Data controller", "KM TECH LABS, Kristiansand, Norway is the data controller for RankFinal.com. For privacy requests, contact hello@rankfinal.com."],
+      ["Data controller", "KM TECH LABS, Kristiansand, Norway is the data controller for RankFinal.com. Privacy requests can be submitted through the contact form."],
       ["Data collection", "We collect only the data needed to operate the service, such as account details, billing status, support messages, search activity required for saved results, and technical security logs."],
       ["Cookies", "RankFinal uses essential cookies only. We do not use tracking cookies, advertising cookies, or third-party behavioral profiling cookies."],
       ["User rights", "You may request access, correction, deletion, restriction, portability, or objection to processing of your personal data. You may also contact your local data protection authority."],
@@ -76,7 +76,7 @@ export function LegalPage({ kind }: { kind: LegalKind }) {
             ))}
           </CardContent>
         </Card>
-        <p className="text-sm text-text-secondary">Questions? Contact <Link to="/about" className="font-bold text-accent-amber hover:underline">KM TECH LABS</Link>.</p>
+        <p className="text-sm text-text-secondary">Questions? Contact <Link to="/contact" className="font-bold text-accent-amber hover:underline">KM TECH LABS</Link>.</p>
       </article>
     </PageWrapper>
   );
