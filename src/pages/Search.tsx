@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Check, ExternalLink, Printer, RotateCcw, X } from "lucide-react";
+import { Check, ExternalLink, Printer, RotateCcw, X, Zap } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,19 +25,14 @@ function getCountryFlag(country: string) {
 
 function LoadingResults() {
   return (
-    <PageWrapper className="space-y-8 py-10">
-      <div className="mx-auto max-w-3xl space-y-5 text-center">
-        <Badge variant="amber">AI recommendation engine</Badge>
-        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">Scanning verified sources worldwide...</h1>
-        <div className="mx-auto h-2 max-w-xl overflow-hidden rounded-pill bg-surface shadow-surface">
-          <div className="h-full w-1/2 animate-pulse rounded-pill bg-accent-amber shadow-amber" />
+    <PageWrapper className="flex min-h-[60vh] items-center justify-center py-16">
+      <div className="mx-auto w-full max-w-xl space-y-6 text-center">
+        <div className="mx-auto flex size-16 animate-pulse items-center justify-center rounded-pill bg-accent-amber/15 text-accent-amber shadow-amber">
+          <Zap className="size-8" aria-hidden="true" />
         </div>
-      </div>
-      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
-        <Card className="min-h-80 animate-pulse border-l-4 border-l-accent-amber" />
-        <div className="space-y-6">
-          <Card className="h-44 animate-pulse border-l-4 border-l-accent-purple" />
-          <Card className="h-36 animate-pulse border-l-4 border-l-destructive" />
+        <h1 className="text-3xl font-extrabold text-text-primary sm:text-4xl">Scanning verified sources worldwide...</h1>
+        <div className="h-1.5 overflow-hidden rounded-pill bg-surface shadow-surface">
+          <div className="h-full w-1/2 animate-pulse rounded-pill bg-accent-amber shadow-amber" />
         </div>
       </div>
     </PageWrapper>
@@ -117,7 +112,7 @@ function Sources({ result }: { result: RankFinalResult }) {
   return (
     <Card className="print-section sources-section">
       <CardHeader>
-        <CardTitle>Verified sources</CardTitle>
+        <CardTitle>Verified Sources</CardTitle>
         <CardDescription>All sources are independent. RankFinal receives no payment from any reviewed brand.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
@@ -130,7 +125,7 @@ function Sources({ result }: { result: RankFinalResult }) {
             <p className="mt-2 text-xs font-bold uppercase tracking-wide text-text-secondary">{source.date} · {"★".repeat(Math.max(1, Math.min(5, Math.round(source.credibility))))}</p>
             <p className="mt-3 text-sm leading-6 text-text-secondary">{source.description}</p>
             <a href={source.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-accent-amber">
-              View source <ExternalLink className="size-4" />
+              → View source <ExternalLink className="size-4" />
             </a>
           </article>
         ))}
@@ -150,9 +145,9 @@ function Results({ result }: { result: RankFinalResult }) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="gray">Country: {result.country}</Badge>
-            <Badge variant="amber">Updated: {new Date(result.updated_at).toLocaleDateString()}</Badge>
+            <span className="inline-flex items-center gap-2 rounded-pill border border-border bg-background px-3 py-1 text-xs font-bold text-text-primary"><span className="size-2 rounded-pill bg-success" /> Analysis complete</span>
             <Button variant="secondary" onClick={() => window.print()}>
-              <Printer className="size-4" /> Print this result
+              <Printer className="size-4" /> Print
             </Button>
           </div>
         </div>
@@ -163,27 +158,30 @@ function Results({ result }: { result: RankFinalResult }) {
           <Card className="print-section border-l-4 border-l-accent-amber shadow-amber">
             <CardHeader>
               <Badge variant="amber">🥇 Best choice</Badge>
-              <CardTitle className="text-3xl">{result.best.name}</CardTitle>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <CardTitle className="text-3xl">{result.best.name}</CardTitle>
+                <span className="rounded-pill bg-accent-amber px-3 py-1 text-sm font-extrabold text-primary-foreground">{result.best.score.toFixed(1)} / 10</span>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <ScoreBar score={result.best.score} />
               <p className="text-base leading-8 text-text-primary">{result.best.reason}</p>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <h3 className="font-bold text-text-primary">Strengths</h3>
+                  <h3 className="font-bold text-success">✓ Strengths</h3>
                   {result.best.strengths.map((strength) => (
                     <p key={strength} className="flex gap-2 text-sm text-text-secondary"><Check className="mt-0.5 size-4 shrink-0 text-success" />{strength}</p>
                   ))}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-text-primary">Weaknesses</h3>
+                  <h3 className="font-bold text-destructive">✗ Weaknesses</h3>
                   {result.best.weaknesses.map((weakness) => (
                     <p key={weakness} className="flex gap-2 text-sm text-text-secondary"><X className="mt-0.5 size-4 shrink-0 text-destructive" />{weakness}</p>
                   ))}
                 </div>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xl font-extrabold text-text-primary">{result.best.price_range}</span>
+                <span className="rounded-pill border border-border bg-background px-4 py-2 text-xl font-extrabold text-text-primary">{result.best.price_range}</span>
                 <Button variant="amber">Check current price <ExternalLink className="size-4" /></Button>
               </div>
             </CardContent>
@@ -197,7 +195,7 @@ function Results({ result }: { result: RankFinalResult }) {
                 <CardDescription>{result.alternative.reason}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="rounded-input bg-background p-3 text-sm font-semibold text-text-primary">Choose this if: {result.alternative.good_if}</p>
+                <p className="rounded-input bg-background p-3 text-sm font-semibold italic text-text-primary">Choose this if: {result.alternative.good_if}</p>
                 <span className="font-extrabold text-text-primary">{result.alternative.price_range}</span>
               </CardContent>
             </Card>

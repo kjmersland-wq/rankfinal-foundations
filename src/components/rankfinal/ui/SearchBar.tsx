@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Clock, Globe2, Search, TrendingUp } from "lucide-react";
 import { categories } from "@/data/categories";
@@ -11,13 +11,6 @@ interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement
 
 const RECENT_SEARCHES_KEY = "rankfinal_recent_searches";
 const trendingNow = ["Best EV 2026", "Best smartphone under €800", "Best electricity provider UK"];
-
-function detectCountry() {
-  if (typeof navigator === "undefined") return "US";
-  const locale = navigator.language || "en-US";
-  const region = locale.split("-")[1];
-  return (region || "US").toUpperCase();
-}
 
 function readRecentSearches() {
   try {
@@ -38,7 +31,7 @@ export function SearchBar({ className, containerClassName, defaultValue, placeho
   const [query, setQuery] = useState(String(defaultValue ?? ""));
   const [focused, setFocused] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const country = useMemo(() => detectCountry(), []);
+  const country = "NO";
 
   useEffect(() => {
     setRecentSearches(readRecentSearches());
