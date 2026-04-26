@@ -84,6 +84,7 @@
 
   html {
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -147,5 +148,12 @@
 
   a::after {
     content: "";
+  }
+}
+
+
+@layer utilities {
+  .hover-glow-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-amber;
   }
 }
