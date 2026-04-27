@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onSubmit"> {
   containerClassName?: string;
+  onSearch?: (query: string) => void;
 }
 
 const RECENT_SEARCHES_KEY = "rankfinal_recent_searches";
@@ -25,7 +26,7 @@ function storeRecentSearch(query: string) {
   localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next));
 }
 
-export function SearchBar({ className, containerClassName, defaultValue, placeholder, ...props }: SearchBarProps) {
+export function SearchBar({ className, containerClassName, defaultValue, placeholder, onSearch, ...props }: SearchBarProps) {
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLFormElement>(null);
   const [query, setQuery] = useState(String(defaultValue ?? ""));
@@ -56,6 +57,10 @@ export function SearchBar({ className, containerClassName, defaultValue, placeho
     storeRecentSearch(clean);
     setRecentSearches(readRecentSearches());
     setFocused(false);
+    if (onSearch) {
+      onSearch(clean);
+      return;
+    }
     navigate(`/search?q=${encodeURIComponent(clean)}&country=${country}`);
   };
 
