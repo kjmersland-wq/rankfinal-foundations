@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 import { getProfile, type UserProfile } from "@/lib/auth";
 
 interface AuthContextType {
@@ -13,12 +13,8 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
-  profile: null,
-  loading: true,
-  isPro: false,
-  isBusiness: false,
-  refreshProfile: async () => {},
+  user: null, profile: null, loading: true,
+  isPro: false, isBusiness: false, refreshProfile: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -27,30 +23,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   async function refreshProfile() {
-    if (!auth.currentUser) return;
-    const p = await getProfile(auth.currentUser.uid);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const p = await getProfile(user.id);
     setProfile(p);
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        const p = await getProfile(user.uid);
-        setProfile(p);
-      } else {
-        setProfile(null);
-      }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) getProfile(u.id).then(setProfile);
       setLoading(false);
     });
-    return unsubscribe;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) { const p = await getProfile(u.id); setProfile(p); }
+      else setProfile(null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
     <AuthContext.Provider value={{
-      user,
-      profile,
-      loading,
+      user, profile, loading,
       isPro: profile?.plan === "pro" || profile?.plan === "business",
       isBusiness: profile?.plan === "business",
       refreshProfile,
@@ -60,6 +60,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export function useAuth() { return useContext(AuthContext); }
