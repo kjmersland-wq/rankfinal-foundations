@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
+import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
-export default function SignInPage() {
+// Disable static generation for this auth page
+export const dynamic = 'force-dynamic';
+
+function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
@@ -16,8 +20,25 @@ export default function SignInPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+
+  // Initialize Supabase client on mount (client-side only)
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    
+    const client = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      }
+    });
+    setSupabase(client);
+  }, []);
 
   async function handleSubmit() {
+    if (!supabase) return;
+    
     setError('');
     setLoading(true);
     try {
@@ -43,6 +64,8 @@ export default function SignInPage() {
   }
 
   async function handleGoogle() {
+    if (!supabase) return;
+    
     setError('');
     setLoading(true);
     try {
@@ -79,7 +102,7 @@ export default function SignInPage() {
         <div className="space-y-4">
           <button
             onClick={handleGoogle}
-            disabled={loading}
+            disabled={loading || !supabase}
             className="w-full inline-flex items-center justify-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-bold text-text-primary transition-all hover:bg-background disabled:opacity-50"
           >
             <svg className="size-5" viewBox="0 0 24 24">
@@ -127,7 +150,7 @@ export default function SignInPage() {
           <Button
             variant="default"
             onClick={handleSubmit}
-            disabled={loading || !email || !password}
+            disabled={loading || !email || !password || !supabase}
             className="w-full bg-accent-amber text-primary-foreground hover:bg-accent-amber/90"
           >
             {loading
@@ -175,5 +198,19 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[70vh] items-center justify-center py-16 px-4">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-amber border-r-transparent"></div>
+        </div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }
