@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { categories, countries } from '@/data/categories';
+import { helpArticles } from '@/data/helpArticles';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.rankfinal.com';
@@ -94,7 +95,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
   
+  // Dynamic help article pages
+  const helpArticlePages: MetadataRoute.Sitemap = helpArticles.map((article) => ({
+    url: `${baseUrl}/help/${article.slug}`,
+    lastModified: new Date(article.lastUpdated),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+  
   // All pages combined
   // Ranking pages come first as they're most important for SEO
-  return [...staticPages, ...rankingPages, ...legalPages];
+  return [...staticPages, ...rankingPages, ...helpArticlePages, ...legalPages];
 }
