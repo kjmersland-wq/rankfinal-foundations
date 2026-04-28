@@ -2,6 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   
+  // Disable src directory scanning - we use /app at root level
+  // This prevents conflicts with Vite's /src/pages structure
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
+  
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -11,13 +19,6 @@ const nextConfig = {
         hostname: '*.supabase.co',
       },
     ],
-  },
-  
-  // Enable server actions
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
   },
   
   // Map Vite environment variables to Next.js

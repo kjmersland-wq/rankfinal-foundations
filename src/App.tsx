@@ -13,19 +13,19 @@ import { LoadingSkeleton } from "@/components/rankfinal/ui";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-const Index = lazy(() => import("./pages/Index.tsx"));
-const Browse = lazy(() => import("./pages/Browse.tsx"));
-const SearchPage = lazy(() => import("./pages/Search.tsx"));
-const Pricing = lazy(() => import("./pages/Pricing.tsx"));
-const Help = lazy(() => import("./pages/Help.tsx"));
-const HelpArticle = lazy(() => import("./pages/HelpArticle.tsx"));
-const About = lazy(() => import("./pages/About.tsx"));
-const Contact = lazy(() => import("./pages/Contact.tsx"));
-const Success = lazy(() => import("./pages/Success.tsx"));
-const Cancel = lazy(() => import("./pages/Cancel.tsx"));
-const NotFound = lazy(() => import("./pages/NotFound.tsx"));
-const SignIn = lazy(() => import("./pages/SignIn.tsx"));
-const LegalPage = lazy(() => import("./pages/LegalPage.tsx").then((m) => ({ default: m.LegalPage })));
+const Index = lazy(() => import("./vite-pages/Index"));
+const Browse = lazy(() => import("./vite-pages/Browse"));
+const SearchPage = lazy(() => import("./vite-pages/Search"));
+const Pricing = lazy(() => import("./vite-pages/Pricing"));
+const Help = lazy(() => import("./vite-pages/Help"));
+const HelpArticle = lazy(() => import("./vite-pages/HelpArticle"));
+const About = lazy(() => import("./vite-pages/About"));
+const Contact = lazy(() => import("./vite-pages/Contact"));
+const Success = lazy(() => import("./vite-pages/Success"));
+const Cancel = lazy(() => import("./vite-pages/Cancel"));
+const NotFound = lazy(() => import("./vite-pages/NotFound"));
+const SignIn = lazy(() => import("./vite-pages/SignIn"));
+const LegalPage = lazy(() => import("./vite-pages/LegalPage").then((m) => ({ default: m.LegalPage })));
 
 const queryClient = new QueryClient();
 

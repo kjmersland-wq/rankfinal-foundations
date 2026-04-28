@@ -37,7 +37,7 @@ export async function getProfile(uid: string): Promise<UserProfile | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user || user.id !== uid) return null;
 
-  const { data: profile } = await supabase
+  const { data: profile } = await (supabase as any)
     .from("profiles")
     .select("plan, stripe_customer_id")
     .eq("id", uid)
@@ -46,7 +46,7 @@ export async function getProfile(uid: string): Promise<UserProfile | null> {
   const plan = (profile?.plan ?? "free") as "free" | "pro" | "business";
 
   const today = new Date().toISOString().slice(0, 10);
-  const { data: usage } = await supabase
+  const { data: usage } = await (supabase as any)
     .from("search_usage")
     .select("count, date")
     .eq("user_id", uid)
@@ -73,5 +73,5 @@ export async function canSearch(uid: string): Promise<boolean> {
 }
 
 export async function recordSearch(uid: string) {
-  await supabase.rpc("increment_search_count", { user_uuid: uid });
+  await (supabase as any).rpc("increment_search_count", { user_uuid: uid });
 }

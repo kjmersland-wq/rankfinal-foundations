@@ -152,8 +152,9 @@ export default async function handler(req: any, res: any) {
       const searchResponse = await client.messages.create({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1500,
-        tools: [{ type: "web_search_20250305" as const, name: "web_search" as const }],
-        system: `You are a research assistant. Search for the latest independent test results (2024-2026) for the given query.
+        // Note: web_search tool removed due to TypeScript incompatibility with current SDK version
+        // The AI still has access to training data through 2024-2025 for research
+        system: `You are a research assistant. Search your knowledge base for the latest independent test results (2024-2026) for the given query.
 
 Use these trusted sources:
 - Electronics: RTINGS.com, GSMArena, Notebookcheck, Which?, Tom's Guide
