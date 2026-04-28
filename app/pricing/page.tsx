@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PricingPlans } from './PricingPlans';
 
 // Static Site Generation
@@ -34,6 +36,12 @@ export const metadata: Metadata = {
     canonical: 'https://www.rankfinal.com/pricing',
   },
 };
+
+const plans = [
+  { name: 'Free', monthly: '€0', included: ['5 searches per day', 'Global sources', 'Top recommendation only', 'Basic score breakdown'] },
+  { name: 'Pro', monthly: '€9', included: ['Unlimited searches', 'All countries & regions', 'Full recommendations', 'Complete score breakdown', 'Full verified source list'] },
+  { name: 'Business', monthly: '€49', included: ['Everything in Pro', 'API access (1,000 queries/month)', 'Bulk category analysis', 'B2B market insight reports'] },
+];
 
 const faqs = [
   {
