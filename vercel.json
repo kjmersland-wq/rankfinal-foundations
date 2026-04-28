@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/rankfinal-ai/route.ts": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "app/api/create-checkout/route.ts": {
+      "maxDuration": 10,
+      "memory": 512
+    },
+    "app/api/og/route.tsx": {
+      "maxDuration": 10,
+      "memory": 1024,
+      "runtime": "edge"
+    }
+  },
+  "crons": []
+}
