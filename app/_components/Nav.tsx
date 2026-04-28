@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Zap, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SearchBar } from './SearchBar';
 import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase-client';
 
 const navItems = [
   { label: 'Browse', href: '/browse' },
@@ -17,6 +18,7 @@ const navItems = [
 
 export function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
@@ -33,6 +35,20 @@ export function Nav() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
+  async function handleGetPro() {
+    // Check if user is authenticated
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      // Redirect to signin with redirect back to pricing
+      router.push('/signin?redirect=' + encodeURIComponent('/pricing'));
+      return;
+    }
+
+    // User is signed in, go to pricing page where they can select a plan
+    router.push('/pricing');
+  }
   return (
     <header className={cn('sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl transition-transform duration-300', hidden && '-translate-y-full')}>
       <nav className="mx-auto flex h-16 w-full max-w-[1280px] items-center gap-4 px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
@@ -70,10 +86,10 @@ export function Nav() {
           <Link href="/pricing" className="rounded-pill border border-border bg-secondary px-2.5 py-1 text-xs font-bold text-text-secondary transition-colors hover:border-accent-amber hover:text-accent-amber">
             Free
           </Link>
-          <Button asChild variant="amber" size="pill">
-            <Link href="/pricing">
+          <Button asChild variant="amber" size="pill" onClick={handleGetPro}>
+            <button type="button">
               Get Pro <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
+            </button>
           </Button>
         </div>
         <button
@@ -102,10 +118,11 @@ export function Nav() {
                 </Link>
               ))}
             </div>
-            <Button asChild variant="amber" size="lg">
-              <Link href="/pricing" onClick={() => setOpen(false)}>
-                Get Pro <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
+            <Button variant="amber" size="lg" onClick={() => {
+              setOpen(false);
+              handleGetPro();
+            }}>
+              Get Pro <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
           </div>
         </div>

@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Check, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PricingPlans } from './PricingPlans';
 
 // Static Site Generation
 export const dynamic = 'force-static';
@@ -37,36 +35,6 @@ export const metadata: Metadata = {
   },
 };
 
-const plans = [
-  {
-    name: "Free",
-    monthly: "€0",
-    annual: "€0",
-    button: "Get started free",
-    featured: false,
-    included: ["5 searches per day", "Global sources", "Top recommendation only", "Basic score breakdown"],
-    excluded: ["Country filtering", "Full source list", "PDF export", "Save results", "Email alerts"],
-  },
-  {
-    name: "Pro",
-    monthly: "€9",
-    annual: "€7",
-    button: "Start Pro – 14 days free",
-    featured: true,
-    included: ["Unlimited searches", "All countries & regions", "Full recommendations", "Complete score breakdown", "Full verified source list", "PDF export", "Save & compare up to 20 results", "Email alerts", "Early access to new categories"],
-    excluded: ["API access", "B2B data reports"],
-  },
-  {
-    name: "Business",
-    monthly: "€49",
-    annual: "€39",
-    button: "Get Business",
-    featured: false,
-    included: ["Everything in Pro", "API access (1,000 queries/month)", "Bulk category analysis", "B2B market insight reports", "White-label result embedding", "Priority support (< 4h response)", "Dedicated account manager"],
-    excluded: [],
-  },
-];
-
 const faqs = [
   {
     question: "How does the free plan work?",
@@ -93,21 +61,6 @@ const faqs = [
     answer: "No. RankFinal receives no payment from reviewed brands and does not sell recommendation placement."
   },
 ];
-
-function FeatureRow({ children, included }: { children: React.ReactNode; included: boolean }) {
-  return (
-    <li className="flex gap-3 text-sm leading-6">
-      {included ? (
-        <Check className="mt-1 h-4 w-4 shrink-0 text-green-500" />
-      ) : (
-        <X className="mt-1 h-4 w-4 shrink-0 text-red-500" />
-      )}
-      <span className={included ? "" : "text-muted-foreground"}>
-        {children}
-      </span>
-    </li>
-  );
-}
 
 export default function PricingPage() {
   return (
@@ -171,54 +124,7 @@ export default function PricingPage() {
         </section>
 
         {/* Plans */}
-        <section className="grid gap-5 lg:grid-cols-3">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={plan.featured ? "border-accent-amber shadow-lg lg:-translate-y-3" : ""}
-            >
-              {plan.featured && (
-                <div className="absolute right-5 top-5 inline-flex items-center rounded-full border border-accent-amber/40 bg-accent-amber/20 px-3 py-1 text-xs font-semibold text-accent-amber">
-                  Most popular
-                </div>
-              )}
-              <CardHeader className="space-y-4 relative">
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <div>
-                  <span className="text-5xl font-extrabold">
-                    {plan.monthly}
-                  </span>
-                  <span className="ml-1 text-sm font-semibold text-muted-foreground">
-                    /month
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-1 flex-col gap-6">
-                <ul className="space-y-3">
-                  {plan.included.map((feature) => (
-                    <FeatureRow key={feature} included>
-                      {feature}
-                    </FeatureRow>
-                  ))}
-                  {plan.excluded.map((feature) => (
-                    <FeatureRow key={feature} included={false}>
-                      {feature}
-                    </FeatureRow>
-                  ))}
-                </ul>
-                <Link href={plan.name === "Free" ? "/" : "/signin"}>
-                  <Button
-                    variant={plan.name === "Free" ? "ghost" : plan.featured ? "default" : "secondary"}
-                    size="lg"
-                    className={plan.featured ? "w-full bg-accent-amber hover:bg-accent-amber/90" : "w-full"}
-                  >
-                    {plan.button}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
+        <PricingPlans />
 
         {/* FAQs */}
         <section className="mx-auto max-w-3xl space-y-6">

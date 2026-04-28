@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { createClient } from '@supabase/supabase-js';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase-client';
 
 // Disable static generation for this auth page
 export const dynamic = 'force-dynamic';
@@ -14,48 +13,39 @@ function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
+  const supabase = createClient(); // Create client directly, no need for state
   
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
-
-  // Initialize Supabase client on mount (client-side only)
-  useEffect(() => {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    
-    const client = createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      }
-    });
-    setSupabase(client);
-  }, []);
 
   async function handleSubmit() {
-    if (!supabase) return;
-    
     setError('');
     setLoading(true);
     try {
       if (mode === 'signup') {
         const { error: signUpError } = await supabase.auth.signUp({ 
           email, 
-          password 
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
+          }
         });
         if (signUpError) throw signUpError;
+        // Show success message for signup
+        setError('');
+        alert('Check your email to confirm your account!');
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({ 
           email, 
           password 
         });
         if (signInError) throw signInError;
+        router.push(redirect);
+        router.refresh(); // Refresh to update auth state
       }
-      router.push(redirect);
     } catch (err: any) {
       setError(err.message?.replace('Firebase: ', '') || 'Something went wrong');
     } finally {
@@ -64,15 +54,13 @@ function SignInForm() {
   }
 
   async function handleGoogle() {
-    if (!supabase) return;
-    
     setError('');
     setLoading(true);
     try {
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { 
-          redirectTo: `${window.location.origin}${redirect}` 
+          redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}` 
         },
       });
       if (oauthError) throw oauthError;
@@ -102,7 +90,7 @@ function SignInForm() {
         <div className="space-y-4">
           <button
             onClick={handleGoogle}
-            disabled={loading || !supabase}
+            disabled={loading}
             className="w-full inline-flex items-center justify-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-bold text-text-primary transition-all hover:bg-background disabled:opacity-50"
           >
             <svg className="size-5" viewBox="0 0 24 24">
@@ -150,7 +138,7 @@ function SignInForm() {
           <Button
             variant="default"
             onClick={handleSubmit}
-            disabled={loading || !email || !password || !supabase}
+            disabled={loading || !email || !password}
             className="w-full bg-accent-amber text-primary-foreground hover:bg-accent-amber/90"
           >
             {loading
