@@ -15,7 +15,8 @@
 ### 1.1 Install Next.js
 
 ```bash
-# Install Next.js 14+ and required dependencies
+# Install Next.js 16+ (latest) and required dependencies
+# Note: Use Next.js 16.2.4+ to avoid critical DoS vulnerabilities
 npm install next@latest react@latest react-dom@latest
 npm install --save-dev @types/node
 
