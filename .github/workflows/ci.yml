@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Type check
+        run: npx tsc --noEmit
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Run tests
+        run: npm run test
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Security audit
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+      
+      - name: Bundle size check
+        run: |
+          if [ -f dist/assets/index-*.js ]; then
+            SIZE=$(stat -f%z dist/assets/index-*.js 2>/dev/null || stat -c%s dist/assets/index-*.js)
+            SIZE_KB=$((SIZE / 1024))
+            MAX_SIZE_KB=600
+            echo "Bundle size: ${SIZE_KB} KB"
+            if [ $SIZE_KB -gt $MAX_SIZE_KB ]; then
+              echo "⚠️ Warning: Bundle size ${SIZE_KB} KB exceeds recommended ${MAX_SIZE_KB} KB"
+            else
+              echo "✅ Bundle size is acceptable"
+            fi
+          fi
