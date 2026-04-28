@@ -15,9 +15,7 @@
       "memory": 512
     },
     "app/api/og/route.tsx": {
-      "maxDuration": 10,
-      "memory": 1024,
-      "runtime": "edge"
+      "maxDuration": 10
     }
   },
   "crons": []
