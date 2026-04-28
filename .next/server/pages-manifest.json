@@ -1,0 +1,19 @@
+{
+  "/_error": "pages/_error.js",
+  "/_app": "pages/_app.js",
+  "/About": "pages/About.js",
+  "/Browse": "pages/Browse.js",
+  "/Cancel": "pages/Cancel.js",
+  "/Contact": "pages/Contact.js",
+  "/Help": "pages/Help.js",
+  "/HelpArticle": "pages/HelpArticle.js",
+  "/Index": "pages/Index.js",
+  "/LegalPage": "pages/LegalPage.js",
+  "/PlaceholderPage": "pages/PlaceholderPage.js",
+  "/NotFound": "pages/NotFound.js",
+  "/Pricing": "pages/Pricing.js",
+  "/Search": "pages/Search.js",
+  "/SignIn": "pages/SignIn.js",
+  "/Success": "pages/Success.js",
+  "/_document": "pages/_document.js"
+}
