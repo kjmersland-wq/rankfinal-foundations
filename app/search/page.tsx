@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Search as SearchIcon } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import SearchPageClient from './SearchPageClient';
 
 // Dynamic metadata based on search query
 export async function generateMetadata({
@@ -78,18 +76,10 @@ export async function generateMetadata({
   };
 }
 
-// Server-side rendering for dynamic queries
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string; country?: string }>;
-}) {
-  const params = await searchParams;
-  const query = params.q;
-  const country = params.country || 'Norway';
-
+// Server-side rendering for SEO, client component handles interactivity
+export default async function SearchPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <>
       {/* Structured Data - SearchAction */}
       <script
         type="application/ld+json"
@@ -135,128 +125,7 @@ export default async function SearchPage({
         }}
       />
 
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-            {query ? `Results for "${query}"` : 'Search Rankings'}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {query
-              ? `AI-powered recommendations for the best ${query} in ${country}`
-              : 'Get unbiased, AI-powered recommendations based on verified test data'}
-          </p>
-        </div>
-
-        {/* Search Form - Client Component Will Be Loaded */}
-        <Card className="max-w-3xl mx-auto">
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground text-center">
-                Enter a product or service to get AI-powered recommendations based on verified test data
-              </p>
-              <div className="flex items-center gap-2 p-4 rounded-lg border border-accent-amber/40 bg-accent-amber/5">
-                <SearchIcon className="h-5 w-5 text-accent-amber flex-shrink-0" />
-                <span className="text-sm">
-                  Client-side search component will be loaded here with real-time AI search
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Popular Searches */}
-        {!query && (
-          <Card className="max-w-3xl mx-auto">
-            <CardHeader>
-              <CardTitle>Popular Searches</CardTitle>
-              <CardDescription>Trending product and service searches</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  'Best EV 2026',
-                  'Best smartphone',
-                  'Cheapest electricity Norway',
-                  'Best bank Norway',
-                  'Best travel insurance',
-                  'Best laptop 2026',
-                  'Home insurance UK',
-                  'Best car insurance',
-                ].map((term) => (
-                  <Link
-                    key={term}
-                    href={`/search?q=${encodeURIComponent(term)}&country=Norway`}
-                    className="rounded-lg border border-border bg-background px-4 py-3 text-sm font-medium hover:border-accent-amber/60 hover:bg-accent-amber/5 transition-colors"
-                  >
-                    {term}
-                  </Link>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Query Results Placeholder */}
-        {query && (
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Card className="bg-accent-amber/10 border-accent-amber/40">
-              <CardContent className="pt-6">
-                <div className="text-center space-y-3">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-amber/20 mb-2">
-                    <SearchIcon className="h-6 w-6 text-accent-amber" />
-                  </div>
-                  <h2 className="text-xl font-bold">Searching for: {query}</h2>
-                  <p className="text-muted-foreground">
-                    Country: {country}
-                  </p>
-                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                    This is the SSR-rendered search page. The actual search results will be loaded
-                    via the client-side component that calls the AI API endpoint.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>How RankFinal Works</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-amber/20 mb-2">
-                      <span className="text-lg font-bold text-accent-amber">1</span>
-                    </div>
-                    <h3 className="font-semibold">Collect</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Our AI collects independent test data from verified global sources
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-amber/20 mb-2">
-                      <span className="text-lg font-bold text-accent-amber">2</span>
-                    </div>
-                    <h3 className="font-semibold">Analyze</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Removes bias and weighs quality of testing, not quantity of reviews
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-amber/20 mb-2">
-                      <span className="text-lg font-bold text-accent-amber">3</span>
-                    </div>
-                    <h3 className="font-semibold">Recommend</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Delivers one clear recommendation with full source transparency
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
+      <SearchPageClient />
+    </>
   );
 }
