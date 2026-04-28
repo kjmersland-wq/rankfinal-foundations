@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { categories, countries } from '@/data/categories';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.rankfinal.com';
@@ -77,11 +78,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // In the future, add dynamic routes here:
-  // - Individual ranking pages: /rankings/[category]/[country]
-  // - Help articles: /help/[slug]
-  // - Category pages: /category/[slug]
+  // Dynamic ranking pages - HIGHEST SEO PRIORITY
+  // These are the core SEO assets: each [category]/[country] combination
+  const rankingPages: MetadataRoute.Sitemap = [];
   
-  // For now, return static pages
-  return [...staticPages, ...legalPages];
+  categories.forEach((category) => {
+    countries.forEach((country) => {
+      const countrySlug = country.toLowerCase().replace(/\s+/g, '-');
+      rankingPages.push({
+        url: `${baseUrl}/rankings/${category.id}/${countrySlug}`,
+        lastModified: new Date(),
+        changeFrequency: category.frequency as 'daily' | 'weekly' | 'monthly',
+        priority: 0.95, // Very high priority - these are SEO money pages
+      });
+    });
+  });
+  
+  // All pages combined
+  // Ranking pages come first as they're most important for SEO
+  return [...staticPages, ...rankingPages, ...legalPages];
 }
