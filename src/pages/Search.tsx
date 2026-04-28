@@ -32,7 +32,9 @@ function saveFeedback(query: string, rating: "up" | "down", comment: string) {
     const existing = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]") as object[];
     existing.push({ query, rating, comment, date: new Date().toISOString() });
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(existing));
-  } catch {}
+  } catch (error) {
+    console.error("Failed to save feedback to localStorage:", error);
+  }
 }
 
 async function sendFeedbackEmail(query: string, rating: "up" | "down", comment: string, result: RankFinalResult) {
@@ -50,7 +52,9 @@ async function sendFeedbackEmail(query: string, rating: "up" | "down", comment: 
         date: new Date().toISOString(),
       }),
     });
-  } catch {}
+  } catch (error) {
+    console.error("Failed to send feedback email:", error);
+  }
 }
 
 function UpgradeBanner() {
