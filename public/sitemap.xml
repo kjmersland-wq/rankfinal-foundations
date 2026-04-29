@@ -8,277 +8,329 @@
   <!-- CORE PAGES -->
   <url>
     <loc>https://www.rankfinal.com/</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.rankfinal.com/search</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://www.rankfinal.com/browse</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/pricing</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/help</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/about</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.rankfinal.com/help</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/contact</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- LEGAL PAGES -->
+  <url>
+    <loc>https://www.rankfinal.com/privacy</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/terms</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/cookies</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/disclaimer</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- HELP ARTICLES -->
+  <url>
+    <loc>https://www.rankfinal.com/help/how-scoring-works</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/help/why-one-recommendation</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.rankfinal.com/help/sources-and-verification</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
   </url>
 
   <!-- ELECTRONICS & TECH -->
   <url>
     <loc>https://www.rankfinal.com/browse/electronics</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/smartphones</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/laptops</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/tvs</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/headphones</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/smart-home</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <!-- VEHICLES -->
   <url>
     <loc>https://www.rankfinal.com/browse/vehicles</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/electric-cars</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/cars</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/ev-charging</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- INSURANCE -->
   <url>
     <loc>https://www.rankfinal.com/browse/insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/car-insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/ev-insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/home-insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/travel-insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/life-insurance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- BANKING & FINANCE -->
   <url>
     <loc>https://www.rankfinal.com/browse/banking</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/personal-banking</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/mortgage</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/savings-accounts</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/credit-cards</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
 
   <!-- ENERGY -->
   <url>
     <loc>https://www.rankfinal.com/browse/energy</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/electricity-providers</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/solar-panels</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- HOME & GARDEN -->
   <url>
     <loc>https://www.rankfinal.com/browse/home-garden</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/washing-machines</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/robot-vacuums</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/coffee-machines</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/air-purifiers</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- SPORTS & OUTDOOR -->
   <url>
     <loc>https://www.rankfinal.com/browse/sports-outdoor</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/running-shoes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/skiing-equipment</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/hunting</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/bicycles</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- HEALTH & WELLNESS -->
   <url>
     <loc>https://www.rankfinal.com/browse/health-wellness</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/browse/fitness-trackers</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- TRAVEL -->
   <url>
     <loc>https://www.rankfinal.com/browse/travel</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -286,87 +338,87 @@
   <!-- BABY & FAMILY -->
   <url>
     <loc>https://www.rankfinal.com/browse/baby-family</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- PETS -->
   <url>
     <loc>https://www.rankfinal.com/browse/pets</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- BUSINESS -->
   <url>
     <loc>https://www.rankfinal.com/browse/business</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- HIGH-VALUE SEARCH PAGES -->
   <url>
     <loc>https://www.rankfinal.com/search?q=best+bank+Norway</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+EV+insurance+Norway</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+electricity+provider+Norway</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+smartphone+2026</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+travel+insurance+Europe</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=beste+bank+Norge</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=beste+bilforsikring+Norge</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=beste+strømleverandør+Norge</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+electric+car+2026</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.rankfinal.com/search?q=best+laptop+under+1000+euro</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
 
 </urlset>
